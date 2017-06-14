@@ -1,0 +1,25 @@
+{
+  "name": "mapa-bordo",
+  "version": "1.0.0",
+  "description": "Mapa de bordo para BD I",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/concatto/MapaBordo.git"
+  },
+  "author": "Fernando Concatto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/concatto/MapaBordo/issues"
+  },
+  "homepage": "https://github.com/concatto/MapaBordo#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "express": "^4.15.3",
+    "pg": "^6.2.4",
+    "pg-promise": "^5.9.3"
+  }
+}
