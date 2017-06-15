@@ -1,41 +1,60 @@
 import { connect } from 'react-redux';
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Row, Col, Image } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, Row, Col } from 'react-bootstrap';
+import { push } from 'react-router-redux';
+import { Link, withRouter } from 'react-router-dom';
 import React from 'react';
 
-const NavigationBar = (props) => {
-  return (
-    <Navbar fixedTop fluid inverse>
-      <Row>
-        <Col xs={10} xsOffset={1}>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <span>Borealis</span>
-            </Navbar.Brand>
+class NavigationBar extends React.Component {
+  handleSelect(key, e) {
+    e.preventDefault();
+    this.props.push(key);
+  }
 
-            <Navbar.Toggle/>
-          </Navbar.Header>
-          <Navbar.Collapse>
-            <Nav>
-              <NavItem>Cadastrar</NavItem>
-              <NavItem>Visualizar</NavItem>
-              <NavDropdown title="Relatórios">
-                <MenuItem>Atividade Geral</MenuItem>
-                <MenuItem>Embarcações</MenuItem>
-                <MenuItem>Capturas</MenuItem>
-              </NavDropdown>
-            </Nav>
-            <Nav pullRight>
-              <NavItem>Sobre</NavItem>
-            </Nav>
-          </Navbar.Collapse>
-        </Col>
-      </Row>
-    </Navbar>
-  );
-};
+  render() {
+    let path = this.props.location.pathname;
+    const idx = path.indexOf("/", 1);
 
-const stateMapper = (state) => ({
-  test: "Hello!"
+    if (idx > 0) {
+      path = path.substring(0, idx);
+    }
+
+    const pages = {
+      insert: "/cadastrar",
+      query: "/visualizar",
+      summaries: "/relatorios",
+      about: "/sobre"
+    };
+
+    return (
+      <Navbar fixedTop fluid inverse>
+        <Row>
+          <Col xs={10} xsOffset={1}>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <Link to="/">Borealis</Link>
+              </Navbar.Brand>
+
+              <Navbar.Toggle/>
+            </Navbar.Header>
+            <Navbar.Collapse>
+              <Nav onSelect={(key, e) => this.handleSelect(key, e)} activeKey={path}>
+                <NavItem eventKey={pages.insert} href={pages.insert}>Cadastrar</NavItem>
+                <NavItem eventKey={pages.query} href={pages.query}>Visualizar</NavItem>
+                <NavItem eventKey={pages.summaries} href={pages.summaries}>Relatórios</NavItem>
+              </Nav>
+              <Nav onSelect={(key, e) => this.handleSelect(key, e)} activeKey={path} pullRight>
+                <NavItem eventKey={pages.about} href={pages.about}>Sobre</NavItem>
+              </Nav>
+            </Navbar.Collapse>
+          </Col>
+        </Row>
+      </Navbar>
+    );
+  }
+}
+
+const stateMapper = (state, ownProps) => ({
+  ...ownProps,
 });
 
-export default connect(stateMapper)(NavigationBar);
+export default withRouter(connect(stateMapper, {push})(NavigationBar));

@@ -34,3 +34,22 @@ body {
 .inner p {
   margin: 20px 0px;
 }
+
+.action-group .btn {
+  margin-top: 20px;
+}
+
+.action-group img {
+  height: 90px;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.action-group .media-left {
+  padding-right: 20px;
+}
+
+.action-group .list-group-item {
+  padding: 20px;
+}
