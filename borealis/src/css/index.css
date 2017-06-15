@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.main {
+  padding-top: 45px;
+}
+
+.home {
+  padding: 20px 0px;
+  min-height: calc(100vh - 45px);
+  display: flex;
+  align-items: center;
+}
+
+.inner {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.inner h1 {
+  font-size: 90px;
+  margin: 40px 0px;
+}
+
+.inner .col-md-4 {
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-bottom: 30px;
+}
+
+.inner p {
+  margin: 20px 0px;
+}
