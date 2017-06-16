@@ -5,13 +5,17 @@ import { Route, Switch } from 'react-router-dom';
 import { store, history } from './store';
 import { Grid, Row, Col } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar';
-import Home from './components/Home';
-import InsertRoot from './components/InsertRoot';
-import QueryRoot from './components/QueryRoot';
-import SummariesRoot from './components/SummariesRoot';
-import About from './components/About';
+import routes from './routeConfig';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.routes = routes.map((route) => (
+      <Route exact path={route.path} component={route.component} key={route.path}/>
+    ));
+  }
+
   render() {
     return (
       <Provider store={store}>
@@ -23,11 +27,7 @@ class App extends Component {
               <Row>
                 <Col xs={10} xsOffset={1}>
                   <Switch>
-                    <Route exact path="/" component={Home}/>
-                    <Route exact path="/cadastrar" component={InsertRoot}/>
-                    <Route exact path="/visualizar" component={QueryRoot}/>
-                    <Route exact path="/relatorios" component={SummariesRoot}/>
-                    <Route exact path="/sobre" component={About}/>
+                    {this.routes}
                   </Switch>
                 </Col>
               </Row>

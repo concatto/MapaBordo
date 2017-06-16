@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
@@ -8,8 +8,17 @@ export const history = createHistory();
 
 const middleware = applyMiddleware(routerMiddleware(history), createLogger(), thunk);
 
-const reducer = (state={}, action) => {
+const shipReducer = (state={}, action) => {
+  switch (action.type) {
+    case "FETCH_START":
+      return {fetching: true};
+    case "SHIPS_FETCHED":
+      return {fetching: false, content: action.payload}
+  }
+
   return state;
 };
 
-export const store = createStore(reducer, middleware);
+export const store = createStore(combineReducers({
+  ships: shipReducer
+}), middleware);
