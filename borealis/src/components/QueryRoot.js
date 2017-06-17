@@ -3,10 +3,6 @@ import { PageHeader, ListGroup } from 'react-bootstrap';
 import ActionCard from './ActionCard';
 
 class QueryRoot extends React.Component {
-  componentDidMount() {
-    document.title = "Visualizar informações";
-  }
-
   render() {
     return (
       <div>

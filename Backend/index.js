@@ -28,16 +28,29 @@ const pgConfig = {
 
 const db = pgp(pgConfig);
 
+
+//Router para viagens
 const viagensRouter = express.Router();
 
 viagensRouter.get("/", (req, res) => {
-	db.any("SELECT * FROM viagem").then(data => {
-		res.status(200).json(data);
+	db.any("SELECT viagem.*, pc.nome AS porto_chegada, ps.nome AS porto_saida FROM viagem JOIN porto pc ON pc.id = viagem.porto_chegada_id JOIN porto ps ON ps.id = viagem.porto_saida_id").then(data => {
+		res.status(200).json(toObject(data));
 	}).catch(err => {
 		res.status(500).json(err);
 	});
 });
 
+viagensRouter.get("/:id", (req, res) => {
+	db.any("SELECT * FROM viagem WHERE id = $1 INNER JOIN porto ON porto.id = viagem.porto_chegada_id OR porto.id = viagem.porto_saida_id", req.params.id).then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+//Fim do router
+
+
+//Router para embarcações
 const embarcacoesRouter = express.Router();
 
 embarcacoesRouter.get("/", (req, res) => {
@@ -55,11 +68,57 @@ embarcacoesRouter.get("/:id", (req, res) => {
 		res.status(500).json(err);
 	});
 });
+//Fim do router
+
+
+//Router para portos
+const portosRouter = express.Router();
+
+portosRouter.get("/", (req, res) => {
+	db.any("SELECT * FROM porto").then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
+portosRouter.get("/:id", (req, res) => {
+	db.any("SELECT * FROM porto WHERE id = $1", req.params.id).then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+//Fim do router
+
+
+//Router para espécies
+const especiesRouter = express.Router();
+
+especiesRouter.get("/", (req, res) => {
+	db.any("SELECT * FROM especie").then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
+especiesRouter.get("/:id", (req, res) => {
+	db.any("SELECT * FROM especie WHERE id = $1", req.params.id).then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+//Fim do router
+
 
 var app = express();
 app.use(enableCors);
 app.use("/viagem", viagensRouter);
 app.use("/embarcacao", embarcacoesRouter);
+app.use("/porto", portosRouter);
+app.use("/especie", especiesRouter);
 
 var server = http.createServer(app);
 server.listen("4000");

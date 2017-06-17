@@ -3,10 +3,6 @@ import { PageHeader, ListGroup } from 'react-bootstrap';
 import ActionCard from './ActionCard';
 
 class InsertRoot extends React.Component {
-  componentDidMount() {
-    document.title = "Cadastrar dados";
-  }
-
   render() {
     return (
       <div>

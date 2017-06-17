@@ -7,12 +7,28 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import NavigationBar from './components/NavigationBar';
 import routes from './routeConfig';
 
+const withTitle = (Component, title) => {
+  return class extends React.Component {
+    componentDidMount() {
+      document.title = title;
+    }
+
+    render() {
+      return <Component {...this.props}/>;
+    }
+  };
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.routes = routes.map((route) => (
-      <Route exact path={route.path} component={route.component} key={route.path}/>
+      <Route exact
+        path={route.path}
+        component={withTitle(route.component, route.title)}
+        key={route.path}
+      />
     ));
   }
 

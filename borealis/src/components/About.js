@@ -2,10 +2,6 @@ import React from 'react';
 import { PageHeader, Panel } from 'react-bootstrap';
 
 class About extends React.Component {
-  componentDidMount() {
-    document.title = "Sobre";
-  }
-
   render() {
     const links = {
       gmail: "fernandoconcatto@gmail.com",

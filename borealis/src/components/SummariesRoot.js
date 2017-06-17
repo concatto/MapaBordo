@@ -3,10 +3,6 @@ import { PageHeader, ListGroup } from 'react-bootstrap';
 import ActionCard from './ActionCard';
 
 class SummariesRoot extends React.Component {
-  componentDidMount() {
-    document.title = "Conferir relatórios";
-  }
-
   render() {
     return (
       <div>

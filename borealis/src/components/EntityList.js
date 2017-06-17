@@ -1,5 +1,5 @@
 import React from 'react';
-import { PageHeader, ListGroup } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
 import Loader from './Loader';
 
 class EntityList extends React.Component {
@@ -7,11 +7,17 @@ class EntityList extends React.Component {
     this.props.fetchData();
   }
 
+  mapContent() {
+    return Object.values(this.props.data).map((value) => (
+      this.props.contentMapper(value)
+    ));
+  }
+
   getContent() {
-    if (this.props.content && this.props.content.length > 0) {
+    if (this.props.data && Object.keys(this.props.data).length > 0) {
       return (
         <ListGroup className={this.props.className} onSelect={(key) => alert(key)}>
-          {this.props.content}
+          {this.mapContent()}
         </ListGroup>
       );
     } else {

@@ -4,10 +4,6 @@ import { Row, Col } from 'react-bootstrap';
 import LinkButton from './LinkButton';
 
 class Home extends React.Component {
-  componentDidMount() {
-    document.title = "Borealis";
-  }
-
   render() {
     return (
       <div className="home">
