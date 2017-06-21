@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchFishes } from '../../actions';
 import Loader from '../Loader';
-import { PageHeader, Panel, Button, Row, Col, Thumbnail, Glyphicon } from 'react-bootstrap';
+import { PageHeader, Panel, Button, Row, Col, Thumbnail } from 'react-bootstrap';
 
 class FishInformation extends React.Component {
   componentDidMount() {
@@ -14,14 +14,13 @@ class FishInformation extends React.Component {
     return this.props.fish.fotos.map((photo) => (
       <Col xs={6} md={3} key={photo.id}>
         <Thumbnail src={photo.caminho} href={photo.caminho} target="_blank"/>
-        <Button bsStyle="danger"><Glyphicon glyph="trash"/></Button>
       </Col>
     ));
   }
-  
+
   getContent() {
     const { fish } = this.props;
-    
+
     if (fish) {
       return (
         <div>

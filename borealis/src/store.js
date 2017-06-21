@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { routerMiddleware } from 'react-router-redux';
+import { routerMiddleware, LOCATION_CHANGE } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import thunk from 'redux-thunk';
@@ -19,6 +19,8 @@ const entityReducer = (prefix, state, action) => {
       return {fetching: true};
     case prefix + "_FETCHED":
       return {fetching: false, content: {...state.content, ...action.payload}};
+    case LOCATION_CHANGE:
+      return {};
     default:
       return state;
   }

@@ -87,19 +87,7 @@ body {
   object-fit: cover;
 }
 
-.fish-photos {
-  padding-top: 16px;
-}
-
-.fish-photos h3 {
+.entity-information h3 {
+  padding-top: 20px;
   padding-bottom: 12px;
-}
-
-.fish-photos .btn {
-  position: absolute;
-  top: 0;
-  right: 15px;
-  margin: 0;
-  font-size: 13px;
-  padding: 4px 7px;
 }
