@@ -80,3 +80,26 @@ body {
 .entity-list .list-group-item h3 {
   margin: 10px 0px;
 }
+
+.fish-photos img {
+  height: 150px !important;
+  width: 100%;
+  object-fit: cover;
+}
+
+.fish-photos {
+  padding-top: 16px;
+}
+
+.fish-photos h3 {
+  padding-bottom: 12px;
+}
+
+.fish-photos .btn {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  margin: 0;
+  font-size: 13px;
+  padding: 4px 7px;
+}

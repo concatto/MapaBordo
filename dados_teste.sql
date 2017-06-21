@@ -15,6 +15,12 @@ INSERT INTO especie (id, nome, profundidade_min, profundidade_max) VALUES
 	(3, 'Merluza', 50, 60),
 	(4, 'Sardinha', 100, 1000);
 	
+INSERT INTO fotografia (id, caminho, especie_id) VALUES
+	(1, '/assets/tainha1.jpg', 1),
+	(2, '/assets/tainha2.jpg', 1),
+	(3, '/assets/tainha3.jpg', 1),
+	(4, '/assets/tainha4.png', 1);
+	
 INSERT INTO viagem (id, embarcacao_id, porto_saida_id, porto_chegada_id, data_saida, data_chegada) VALUES
 	(1, 1, 1, 2, '2010-03-20', '2010-03-21'),
 	(2, 2, 2, 1, '2010-03-22', '2010-03-23'),

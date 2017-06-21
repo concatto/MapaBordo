@@ -12,8 +12,8 @@ function toObject(data) {
 
 var enableCors = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
 
 	next();
 };
@@ -33,7 +33,7 @@ const db = pgp(pgConfig);
 const viagensRouter = express.Router();
 
 viagensRouter.get("/", (req, res) => {
-	db.any("SELECT viagem.*, pc.nome AS porto_chegada, ps.nome AS porto_saida FROM viagem JOIN porto pc ON pc.id = viagem.porto_chegada_id JOIN porto ps ON ps.id = viagem.porto_saida_id").then(data => {
+	db.any("SELECT id, porto_saida, porto_saida_id, porto_chegada, porto_chegada_id, data_chegada, data_saida, embarcacao, embarcacao_id FROM viagens_hierarquicas").then(data => {
 		res.status(200).json(toObject(data));
 	}).catch(err => {
 		res.status(500).json(err);
@@ -41,7 +41,7 @@ viagensRouter.get("/", (req, res) => {
 });
 
 viagensRouter.get("/:id", (req, res) => {
-	db.any("SELECT * FROM viagem WHERE id = $1 INNER JOIN porto ON porto.id = viagem.porto_chegada_id OR porto.id = viagem.porto_saida_id", req.params.id).then(data => {
+	db.any("SELECT * FROM viagens_hierarquicas v WHERE v.id = $1", req.params.id).then(data => {
 		res.status(200).json(toObject(data));
 	}).catch(err => {
 		res.status(500).json(err);
@@ -96,7 +96,7 @@ portosRouter.get("/:id", (req, res) => {
 const especiesRouter = express.Router();
 
 especiesRouter.get("/", (req, res) => {
-	db.any("SELECT * FROM especie").then(data => {
+	db.any("SELECT e.*, CASE WHEN COUNT(f.id) = 0 THEN '[]' ELSE json_agg(f.*) END AS fotos FROM especie e LEFT JOIN fotografia f on f.especie_id = e.id GROUP BY e.id").then(data => {
 		res.status(200).json(toObject(data));
 	}).catch(err => {
 		res.status(500).json(err);
@@ -104,9 +104,10 @@ especiesRouter.get("/", (req, res) => {
 });
 
 especiesRouter.get("/:id", (req, res) => {
-	db.any("SELECT * FROM especie WHERE id = $1", req.params.id).then(data => {
+	db.any("SELECT e.*, CASE WHEN COUNT(f.id) = 0 THEN '[]' ELSE json_agg(f.*) END AS fotos FROM especie e LEFT JOIN fotografia f on f.especie_id = e.id WHERE e.id = $1 GROUP BY e.id", req.params.id).then(data => {
 		res.status(200).json(toObject(data));
 	}).catch(err => {
+		console.log(e);
 		res.status(500).json(err);
 	});
 });

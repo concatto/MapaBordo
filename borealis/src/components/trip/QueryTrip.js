@@ -4,14 +4,15 @@ import { PageHeader } from 'react-bootstrap';
 import { fetchTrips } from '../../actions';
 import EntityList from '../EntityList';
 import LinkItem from '../LinkItem';
+import { formatDateShort } from '../../utils';
 
 class QueryTrip extends React.Component {
   mapTrip(trip) {
     return (
       <LinkItem to={"/visualizar/viagem/" + trip.id} key={trip.id}>
         <h3>{trip.porto_chegada} &rarr; {trip.porto_saida}</h3>
-        <h5>Saída: {trip.data_saida}</h5>
-        <h5>Chegada: {trip.data_chegada}</h5>
+        <h5>Saída: {formatDateShort(trip.data_saida)}</h5>
+        <h5>Chegada: {formatDateShort(trip.data_chegada)}</h5>
       </LinkItem>
     );
   }
