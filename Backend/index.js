@@ -114,12 +114,35 @@ especiesRouter.get("/:id", (req, res) => {
 //Fim do router
 
 
+//Router para relatórios
+const relatorioRouter = express.Router();
+
+relatorioRouter.get("/geral", (req, res) => {
+	db.any("SELECT * FROM relatorio_geral").then(data => {
+		res.status(200).json(data);
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
+relatorioRouter.get("/:id", (req, res) => {
+	db.any("SELECT e.*, CASE WHEN COUNT(f.id) = 0 THEN '[]' ELSE json_agg(f.*) END AS fotos FROM especie e LEFT JOIN fotografia f on f.especie_id = e.id WHERE e.id = $1 GROUP BY e.id", req.params.id).then(data => {
+		res.status(200).json(toObject(data));
+	}).catch(err => {
+		console.log(e);
+		res.status(500).json(err);
+	});
+});
+//Fim do router
+
+
 var app = express();
 app.use(enableCors);
 app.use("/viagem", viagensRouter);
 app.use("/embarcacao", embarcacoesRouter);
 app.use("/porto", portosRouter);
 app.use("/especie", especiesRouter);
+app.use("/relatorio", relatorioRouter);
 
 var server = http.createServer(app);
 server.listen("4000");

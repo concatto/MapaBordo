@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { extractShips, extractPorts, extractFishes } from '../utils';
 
 export const fetchShips = (id) => (dispatch) => {
   fetchData(dispatch, id, "http://localhost:4000/embarcacao", "ships");
@@ -23,47 +24,10 @@ export const fetchTrips = (id) => (dispatch) => {
   });
 };
 
-const extractShips = (data) => {
-  const ships = {};
-  Object.keys(data).forEach((key) => {
-    const item = data[key];
-
-    ships[item.embarcacao_id] = item.embarcacao;
-    delete item.embarcacao;
+export const fetchGeneralSummary = () => (dispatch) => {
+  fetchData(dispatch, null, "http://localhost:4000/relatorio/geral", null, (data) => {
+    console.log(data);
   });
-  return ships;
-}
-
-const extractPorts = (data) => {
-  const ports = {};
-  Object.keys(data).forEach((key) => {
-    const item = data[key];
-
-    ports[item.porto_chegada_id] = item.porto_chegada;
-    ports[item.porto_saida_id] = item.porto_saida;
-
-    delete item.porto_chegada;
-    delete item.porto_saida;
-  });
-  return ports;
-}
-
-const extractFishes = (data) => {
-  const fishes = {};
-  Object.keys(data).forEach((key) => {
-    const trip = data[key];
-
-    if (!trip.lances) return;
-
-    trip.lances.forEach((lance, lanceIndex) => {
-      lance.capturas.forEach((captura, capturaIndex) => {
-        fishes[captura.especie_id] = captura.especie;
-
-        delete trip.lances[lanceIndex].capturas[capturaIndex].especie;
-      });
-    });
-  });
-  return fishes;
 }
 
 const fetchData = (dispatch, id, url, reducer, onSuccess) => {

@@ -48,10 +48,10 @@ class TripInformation extends React.Component {
             <h3>Lance #{index}</h3>
             <p>Hora de início: {formatDate(item.hora_inicio)}</p>
             <p>Hora de término: {formatDate(item.hora_fim)}</p>
-            <p>Comprimento da rede: {+item.comprimento_rede.toFixed(2)} metros</p>
-            <p>Altura da rede: {+item.altura_rede.toFixed(2)} metros</p>
-            <p>Tamanho da malha: {+item.tamanho_malha.toFixed(2)} metros</p>
-            <p>Profundidade: {+item.profundidade.toFixed(2)} metros</p>
+            <p>Comprimento da rede: {+item.comprimento_rede.toFixed(2)} m</p>
+            <p>Altura da rede: {+item.altura_rede.toFixed(2)} m</p>
+            <p>Tamanho da malha: {+item.tamanho_malha.toFixed(2)} cm</p>
+            <p>Profundidade: {+item.profundidade.toFixed(2)} m</p>
             <p>Latitude inicial: {convertLatitude(item.latitude_inicial)}</p>
             <p>Longitude inicial: {convertLongitude(item.longitude_inicial)}</p>
             {this.mapCapturesToComponents(item.capturas)}

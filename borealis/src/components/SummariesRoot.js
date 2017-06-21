@@ -11,15 +11,15 @@ class SummariesRoot extends React.Component {
           <ActionCard
             title="Relatório de atividade geral"
             image="/assets/viagem.png"
-            link="/relatorio/geral"/>
+            link="/relatorios/geral"/>
           <ActionCard
             title="Relatório de atividade por embarcação"
             image="/assets/barco.png"
-            link="/relatorio/embarcacao"/>
+            link="/relatorios/embarcacao"/>
           <ActionCard
             title="Relatório de atividade por espécie"
             image="/assets/peixe.png"
-            link="/relatorio/especie"/>
+            link="/relatorios/especie"/>
         </ListGroup>
       </div>
     );
