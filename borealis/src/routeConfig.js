@@ -4,6 +4,7 @@ import QueryRoot from './components/QueryRoot';
 import SummariesRoot from './components/SummariesRoot';
 import About from './components/About';
 import InsertShip from './components/ship/InsertShip';
+import InsertFish from './components/fish/InsertFish';
 import ShipInformation from './components/ship/ShipInformation';
 import PortInformation from './components/port/PortInformation';
 import FishInformation from './components/fish/FishInformation';
@@ -21,6 +22,7 @@ const routes = [
   {path: "/relatorios", component: SummariesRoot, title: "Conferir relatórios"},
   {path: "/sobre", component: About, title: "Sobre"},
   {path: "/cadastrar/embarcacao", component: InsertShip, title: "Nova embarcação"},
+  {path: "/cadastrar/especie", component: InsertFish, title: "Nova espécie"},
   {path: "/visualizar/embarcacao", component: QueryShip, title: "Visualizar embarcações"},
   {path: "/visualizar/porto", component: QueryPort, title: "Visualizar portos"},
   {path: "/visualizar/especie", component: QueryFish, title: "Visualizar espécies"},

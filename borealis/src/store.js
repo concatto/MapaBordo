@@ -26,9 +26,18 @@ const entityReducer = (prefix, state, action) => {
   }
 }
 
+const formReducer = (state={}, action) => {
+  switch (action.type) {
+    case "TOGGLE_TEST_REQUIRED":
+      return {shouldTestRequired: action.payload};
+  }
+  return state;
+};
+
 export const store = createStore(combineReducers({
   ships: shipReducer,
   ports: portReducer,
   fishes: fishReducer,
   trips: tripReducer,
+  form: formReducer,
 }), middleware);

@@ -1,4 +1,5 @@
 import moment from 'moment';
+import React from 'react';
 
 export const formatDate = (str) => moment(str).format("HH:mm, L");
 export const formatDateShort = (str) => moment(str).format("L");
@@ -55,4 +56,39 @@ export const extractFishes = (data) => {
     });
   });
   return fishes;
+}
+
+export const withFileChooser = (Component) => {
+  return class extends React.Component {
+    handleChange() {
+      //Something was chosen
+      if (this.fileInput.files && this.fileInput.files[0]) {
+        this.props.onChoose(this.fileInput.files[0]);
+      }
+    }
+
+    handleRef(ref) {
+      this.fileInput = ref;
+      if (this.props.refCallback) {
+        this.props.refCallback(ref);
+      }
+    }
+
+    render() {
+      const { children, refCallback, onChoose, ...others } = this.props;
+
+      return (
+        <div>
+          <Component {...others} onClick={(e) => this.fileInput.click()}>
+            {children}
+          </Component>
+
+          <input type="file" style={{display: "none"}}
+            onChange={() => this.handleChange()}
+            ref={(r) => this.handleRef(r)}
+          />
+        </div>
+      );
+    }
+  };
 }
