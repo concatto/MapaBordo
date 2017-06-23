@@ -25,9 +25,15 @@ export const fetchTrips = (id) => (dispatch) => {
 };
 
 export const fetchGeneralSummary = () => (dispatch) => {
-  fetchData(dispatch, null, "http://localhost:4000/relatorio/geral", null, (data) => {
-    console.log(data);
-  });
+  fetchData(dispatch, null, "http://localhost:4000/relatorio/geral", "summary");
+}
+
+export const fetchFishSummary = () => (dispatch) => {
+  fetchData(dispatch, null, "http://localhost:4000/relatorio/especies", "summary");
+}
+
+export const fetchShipSummary = () => (dispatch) => {
+  fetchData(dispatch, null, "http://localhost:4000/relatorio/embarcacoes", "summary");
 }
 
 const fetchData = (dispatch, id, url, reducer, onSuccess) => {

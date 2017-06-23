@@ -12,6 +12,7 @@ const shipReducer = (state={}, action) => (entityReducer("SHIPS", state, action)
 const portReducer = (state={}, action) => (entityReducer("PORTS", state, action));
 const fishReducer = (state={}, action) => (entityReducer("FISHES", state, action));
 const tripReducer = (state={}, action) => (entityReducer("TRIPS", state, action));
+const summaryReducer = (state={}, action) => (entityReducer("SUMMARY", state, action));
 
 const entityReducer = (prefix, state, action) => {
   switch (action.type) {
@@ -30,8 +31,9 @@ const formReducer = (state={}, action) => {
   switch (action.type) {
     case "TOGGLE_TEST_REQUIRED":
       return {shouldTestRequired: action.payload};
+    default:
+      return state;
   }
-  return state;
 };
 
 export const store = createStore(combineReducers({
@@ -40,4 +42,5 @@ export const store = createStore(combineReducers({
   fishes: fishReducer,
   trips: tripReducer,
   form: formReducer,
+  summary: summaryReducer,
 }), middleware);

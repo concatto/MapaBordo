@@ -14,6 +14,8 @@ import QueryPort from './components/port/QueryPort';
 import QueryFish from './components/fish/QueryFish';
 import QueryTrip from './components/trip/QueryTrip';
 import GeneralSummary from './components/GeneralSummary';
+import ShipSummary from './components/ShipSummary';
+import FishSummary from './components/FishSummary';
 
 const routes = [
   {path: "/", component: Home, title: "Borealis"},
@@ -32,6 +34,8 @@ const routes = [
   {path: "/visualizar/especie/:id", component: FishInformation, title: "Detalhes da espécie"},
   {path: "/visualizar/viagem/:id", component: TripInformation, title: "Detalhes da viagem"},
   {path: "/relatorios/geral", component: GeneralSummary, title: "Relatório geral"},
+  {path: "/relatorios/embarcacoes", component: ShipSummary, title: "Relatório de embarcações"},
+  {path: "/relatorios/especies", component: FishSummary, title: "Relatório de espécies"},
 ];
 
 export default routes;

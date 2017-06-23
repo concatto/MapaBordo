@@ -125,14 +125,22 @@ relatorioRouter.get("/geral", (req, res) => {
 	});
 });
 
-relatorioRouter.get("/:id", (req, res) => {
-	db.any("SELECT e.*, CASE WHEN COUNT(f.id) = 0 THEN '[]' ELSE json_agg(f.*) END AS fotos FROM especie e LEFT JOIN fotografia f on f.especie_id = e.id WHERE e.id = $1 GROUP BY e.id", req.params.id).then(data => {
-		res.status(200).json(toObject(data));
+relatorioRouter.get("/especies", (req, res) => {
+	db.any("SELECT * FROM relatorio_especies").then(data => {
+		res.status(200).json(data);
 	}).catch(err => {
-		console.log(e);
 		res.status(500).json(err);
 	});
 });
+
+relatorioRouter.get("/embarcacoes", (req, res) => {
+	db.any("SELECT * FROM relatorio_embarcacoes").then(data => {
+		res.status(200).json(data);
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
 //Fim do router
 
 

@@ -11,6 +11,10 @@ class ValidatedInput extends React.Component {
   }
 
   handleChange(e) {
+    if (this.props.onChange) {
+      this.props.onChange(e);
+    }
+
     if (this.props.numeric) {
       const number = e.target.value.replace(",", ".");
       if (isNaN(number)) {
@@ -21,26 +25,18 @@ class ValidatedInput extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.required && this.props.shouldTestRequired) {
-      if (this.input.value.trim().length === 0) {
-        this.displayMessage("Este campo é obrigatório.");
-      }
-    }
-  }
-
-  displayMessage(message) {
-    if (this.state.message !== message) {
-      this.setState({message});
-    }
-  }
-
   render() {
     const isValid = this.state.message.length === 0;
 
+    const { onChange, numeric, ...others } = this.props;
+
     return (
       <FormGroup validationState={isValid ? null : "error"}>
-        <FormControl type="text" onBlur={() => this.props.toggle()} onChange={(e) => this.handleChange(e)} inputRef={(r) => this.input = r}/>
+        <FormControl type="text"
+          onChange={(e) => this.handleChange(e)}
+          inputRef={(r) => this.input = r}
+          {...others}
+        />
         <FormControl.Feedback/>
         {!isValid &&
           <HelpBlock>{this.state.message}</HelpBlock>
@@ -50,12 +46,4 @@ class ValidatedInput extends React.Component {
   }
 }
 
-const stateMapper = (state) => ({
-  ...state.form
-});
-
-const dispatchMapper = (dispatch) => ({
-  toggle: () => dispatch({type: "TOGGLE_TEST_REQUIRED", payload: true})
-});
-
-export default connect(stateMapper, dispatchMapper)(ValidatedInput);
+export default ValidatedInput;

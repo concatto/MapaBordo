@@ -20,7 +20,7 @@ class InsertFish extends React.Component {
     return (
       <div className="entity-information">
         <PageHeader>Nova espécie</PageHeader>
-        <ValidatedInput numeric required/>
+        <ValidatedInput numeric/>
       </div>
     );
   }

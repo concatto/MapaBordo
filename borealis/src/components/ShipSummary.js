@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchGeneralSummary } from '../actions';
+import { fetchShipSummary } from '../actions';
 import Loader from './Loader';
 import { Table, PageHeader } from 'react-bootstrap';
 
-class GeneralSummary extends React.Component {
+class ShipSummary extends React.Component {
   componentDidMount() {
-    this.props.fetchGeneralSummary();
+    this.props.fetchShipSummary();
   }
 
   mapDataToRows() {
@@ -16,11 +16,10 @@ class GeneralSummary extends React.Component {
 
     return Object.values(this.props.content).map((item, index) => (
       <tr key={index}>
+        <td>{item.nome}</td>
         <td>{item.mes}</td>
         <td>{item.ano}</td>
-        <td>{item.embarcacoes_distintas}</td>
-        <td>{item.qtd_viagens}</td>
-        <td>{item.total_peso}</td>
+        <td>{item.total_capturado}</td>
       </tr>
     ));
   }
@@ -28,16 +27,15 @@ class GeneralSummary extends React.Component {
   render() {
     return (
       <div>
-        <PageHeader>Relatório de atividade geral</PageHeader>
+        <PageHeader>Relatório de atividade por embarcação</PageHeader>
         <Loader fetching={this.props.fetching}>
           <Table bordered>
             <thead>
               <tr>
+                <th>Nome da embarcação</th>
                 <th>Mês</th>
                 <th>Ano</th>
-                <th>Embarcações distintas</th>
-                <th>Quantidade de viagens</th>
-                <th>Peso total (kg)</th>
+                <th>Peso total capturado (kg)</th>
               </tr>
             </thead>
             <tbody>
@@ -54,4 +52,4 @@ const stateMapper = (state) => ({
   ...state.summary
 });
 
-export default connect(stateMapper, {fetchGeneralSummary})(GeneralSummary);
+export default connect(stateMapper, {fetchShipSummary})(ShipSummary);
