@@ -4,6 +4,7 @@ import QueryRoot from './components/QueryRoot';
 import SummariesRoot from './components/SummariesRoot';
 import About from './components/About';
 import InsertShip from './components/ship/InsertShip';
+import InsertPort from './components/port/InsertPort';
 import InsertFish from './components/fish/InsertFish';
 import InsertTrip from './components/trip/InsertTrip';
 import ShipInformation from './components/ship/ShipInformation';
@@ -24,17 +25,22 @@ const routes = [
   {path: "/visualizar", component: QueryRoot, title: "Visualizar informações"},
   {path: "/relatorios", component: SummariesRoot, title: "Conferir relatórios"},
   {path: "/sobre", component: About, title: "Sobre"},
+
   {path: "/cadastrar/embarcacao", component: InsertShip, title: "Nova embarcação"},
+  {path: "/cadastrar/porto", component: InsertPort, title: "Novo porto"},
   {path: "/cadastrar/especie", component: InsertFish, title: "Nova espécie"},
   {path: "/cadastrar/viagem", component: InsertTrip, title: "Nova viagem"},
+
   {path: "/visualizar/embarcacao", component: QueryShip, title: "Visualizar embarcações"},
   {path: "/visualizar/porto", component: QueryPort, title: "Visualizar portos"},
   {path: "/visualizar/especie", component: QueryFish, title: "Visualizar espécies"},
   {path: "/visualizar/viagem", component: QueryTrip, title: "Visualizar viagens"},
+
   {path: "/visualizar/embarcacao/:id", component: ShipInformation, title: "Detalhes da embarcação"},
   {path: "/visualizar/porto/:id", component: PortInformation, title: "Detalhes do porto"},
   {path: "/visualizar/especie/:id", component: FishInformation, title: "Detalhes da espécie"},
   {path: "/visualizar/viagem/:id", component: TripInformation, title: "Detalhes da viagem"},
+
   {path: "/relatorios/geral", component: GeneralSummary, title: "Relatório geral"},
   {path: "/relatorios/embarcacoes", component: ShipSummary, title: "Relatório de embarcações"},
   {path: "/relatorios/especies", component: FishSummary, title: "Relatório de espécies"},

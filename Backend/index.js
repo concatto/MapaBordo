@@ -77,6 +77,15 @@ embarcacoesRouter.get("/", (req, res) => {
 	});
 });
 
+embarcacoesRouter.post("/", (req, res) => {
+	db.any("INSERT INTO embarcacao (nome, tamanho) VALUES (${name}, ${size})", req.body).then(data => {
+		res.status(200).end();
+	}).catch(err => {
+		console.log(err);
+		res.status(500).json(err);
+	});
+});
+
 embarcacoesRouter.get("/:id", (req, res) => {
 	db.any("SELECT * FROM embarcacao WHERE id = $1", req.params.id).then(data => {
 		res.status(200).json(toObject(data));
@@ -93,6 +102,17 @@ const portosRouter = express.Router();
 portosRouter.get("/", (req, res) => {
 	db.any("SELECT * FROM porto").then(data => {
 		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
+portosRouter.post("/", (req, res) => {
+	const formData = req.body;
+	formData.adm = formData.adm === "public" ? 1 : 0;
+	
+	db.any("INSERT INTO porto (nome, adm, ano_fundacao) VALUES (${name}, ${adm}, ${year})", formData).then(data => {
+		res.status(200).end();
 	}).catch(err => {
 		res.status(500).json(err);
 	});
@@ -125,11 +145,12 @@ especiesRouter.post("/", (req, res) => {
 		
 		return t.many("INSERT INTO especie (nome, profundidade_min, profundidade_max) VALUES (${name}, ${minDepth}, ${maxDepth}) RETURNING id", req.body)
 			.then(data => {
+				//Espécie inserida, agora precisamos do ID
 				const id = data[0].id;
-				console.log(data);
-				console.log("Outside " + id);
 				
+				//Caso haja alguma foto
 				if (req.body.photos) {
+					//Gravar os arquivos no disco e mapear para INSERTs
 					const queries = req.body.photos.map(item => {
 						const name = shortid.generate();
 						const fullName = saveBase64("C:/Users/Fernando/MapaBordo/borealis/public/assets/", name, item.image); //TODO relativo
@@ -138,6 +159,7 @@ especiesRouter.post("/", (req, res) => {
 						return t.none("INSERT INTO fotografia (caminho, especie_id) VALUES ($1, $2)", ["/assets/" + fullName, id]);
 					});
 					
+					//Realizar todos os INSERTs das fotos em lote
 					return t.batch(queries);
 				}
 			}).catch(err => {

@@ -1,38 +1,41 @@
 import React from 'react';
-import { PageHeader } from 'react-bootstrap';
-import ValidatedInput from '../ValidatedInput';
+import { PageHeader, Row, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
+import { reduxForm, Field } from 'redux-form';
+import Input from '../Input';
+import { postShip } from '../../actions';
+
+class ShipForm extends React.Component {
+  render() {
+    return (
+      <form onSubmit={this.props.handleSubmit}>
+        <Row>
+          <Field name="name" component={Input} label="Nome da embarcação"/>
+        </Row>
+        <Row>
+          <Field name="size" component={Input} label="Tamanho da embarcação" real width={4}/>
+        </Row>
+        <Button bsStyle="success" type="submit">Cadastrar</Button>
+      </form>
+    );
+  }
+}
+
+const ShipFormContainer = reduxForm({form: "ship"})(ShipForm);
 
 class InsertShip extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nome: "",
-      tamanho: "",
-    };
-  }
-
-  handleTextChange(e, property) {
-    this.setState({
-      [property]: e.target.value
-    });
+  handleSubmit(data) {
+    this.props.postShip(data);
   }
 
   render() {
     return (
       <div>
         <PageHeader>Nova embarcação</PageHeader>
-        <ValidatedInput placeholder="Nome"
-          value={this.state.nome}
-          onChange={(e) => this.handleTextChange(e, "nome")}
-        />
-
-        <ValidatedInput placeholder="Tamanho" numeric
-          value={this.state.tamanho}
-          onChange={(e) => this.handleTextChange(e, "tamanho")}
-        />
+        <ShipFormContainer onSubmit={(d) => this.handleSubmit(d)}/>
       </div>
     );
   }
 }
 
-export default InsertShip;
+export default connect(undefined, {postShip})(InsertShip);

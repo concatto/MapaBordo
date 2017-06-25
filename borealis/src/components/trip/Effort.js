@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Button, FormGroup, ControlLabel, FormControl, Row, Col, Glyphicon } from 'react-bootstrap';
-import ValidatedInput from '../ValidatedInput';
 import Capture from './Capture';
 
 class Effort extends React.Component {
@@ -26,13 +25,13 @@ class Effort extends React.Component {
           <Col xs={4}>
             <FormGroup>
               <ControlLabel>Hora de início</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
           <Col xs={4}>
             <FormGroup>
               <ControlLabel>Hora de término</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
         </Row>
@@ -41,13 +40,13 @@ class Effort extends React.Component {
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Comprimento da rede</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Tamanho da malha</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
         </Row>
@@ -56,13 +55,13 @@ class Effort extends React.Component {
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Altura da rede</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Profundidade</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
         </Row>
@@ -71,13 +70,13 @@ class Effort extends React.Component {
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Latitude</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
           <Col xs={6}>
             <FormGroup>
               <ControlLabel>Longitude</ControlLabel>
-              <ValidatedInput numeric/>
+              <FormControl type="text"/>
             </FormGroup>
           </Col>
         </Row>

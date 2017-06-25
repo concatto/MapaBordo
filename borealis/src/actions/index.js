@@ -41,14 +41,13 @@ const fetchData = (dispatch, id, url, reducer, onSuccess) => {
 
   const suffix = id ? ("/" + id) : "";
 
-  axios.get(url + suffix)
-    .then((response) => {
-      if (onSuccess) {
-        onSuccess(response.data);
-      } else {
-        dispatchData(dispatch, reducer, response.data);
-      }
-    });
+  axios.get(url + suffix).then((response) => {
+    if (onSuccess) {
+      onSuccess(response.data);
+    } else {
+      dispatchData(dispatch, reducer, response.data);
+    }
+  });
 }
 
 const dispatchData = (dispatch, reducer, data) => {
@@ -59,10 +58,21 @@ const dispatchData = (dispatch, reducer, data) => {
 }
 
 export const postFish = (data) => (dispatch) => {
+  postData(dispatch, "http://localhost:4000/especie", data);
+};
+
+export const postPort = (data) => (dispatch) => {
+  postData(dispatch, "http://localhost:4000/porto", data);
+};
+
+export const postShip = (data) => (dispatch) => {
+  postData(dispatch, "http://localhost:4000/embarcacao", data);
+};
+
+const postData = (dispatch, url, data) => {
   dispatch({type: "POST_START"});
 
-  axios.post("http://localhost:4000/especie", data)
-    .then((response) => {
-      dispatch({type: "POST_SUCCEEDED"});
-    });
+  axios.post(url, data).then((response) => {
+    dispatch({type: "POST_SUCCEEDED"});
+  });
 };

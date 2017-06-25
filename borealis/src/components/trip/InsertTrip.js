@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchShips, fetchPorts, fetchFishes } from '../../actions';
 import { Button, PageHeader, FormGroup, ControlLabel, FormControl, Row, Col, Panel } from 'react-bootstrap';
-import ValidatedInput from '../ValidatedInput';
 import Effort from './Effort';
 
 class InsertTrip extends React.Component {
