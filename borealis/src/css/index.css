@@ -81,10 +81,22 @@ body {
   margin: 10px 0px;
 }
 
+.fish-photos .thumbnail {
+  cursor: pointer;
+}
+
 .fish-photos img {
   height: 150px !important;
   width: 100%;
   object-fit: cover;
+}
+
+.fish-photos .add-fish img {
+  opacity: 0.15;
+}
+
+.fish-photos .add-fish:hover img {
+  opacity: 0.1;
 }
 
 .entity-information h3 {
@@ -94,4 +106,16 @@ body {
 
 .entity-information {
   padding-bottom: 40px;
+}
+
+.capture-row {
+  display: flex;
+}
+
+.capture-row > div:last-of-type {
+  align-self: flex-end;
+}
+
+.capture-row .btn {
+  font-size: 15px;
 }

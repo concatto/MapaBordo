@@ -1,20 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchShips, fetchPorts } from '../../actions';
+import { fetchShips, fetchPorts, fetchFishes } from '../../actions';
 import { Button, PageHeader, FormGroup, ControlLabel, FormControl, Row, Col, Panel } from 'react-bootstrap';
 import ValidatedInput from '../ValidatedInput';
+import Effort from './Effort';
 
 class InsertTrip extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      efforts: [],
-    };
-  }
-
   componentDidMount() {
     this.props.fetchShips();
     this.props.fetchPorts();
+    this.props.fetchFishes();
   }
 
   mapShipsToOptions() {
@@ -37,90 +32,15 @@ class InsertTrip extends React.Component {
     ));
   }
 
-  createEffort() {
-    const number = this.state.efforts.length;
-    const panel = (
-      <Panel header={"Lance #" + (number + 1)} key={number}>
-        <Row>
-          <Col xs={4}>
-            <FormGroup>
-              <ControlLabel>Data</ControlLabel>
-              <FormControl type="date"/>
-            </FormGroup>
-          </Col>
-          <Col xs={4}>
-            <FormGroup>
-              <ControlLabel>Hora de início</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-          <Col xs={4}>
-            <FormGroup>
-              <ControlLabel>Hora de término</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Comprimento da rede</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Tamanho da malha</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Altura da rede</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Profundidade</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Latitude</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-          <Col xs={6}>
-            <FormGroup>
-              <ControlLabel>Longitude</ControlLabel>
-              <ValidatedInput numeric/>
-            </FormGroup>
-          </Col>
-        </Row>
-
-        <Button className="pull-right" bsStyle="danger">
-          Remover lance
-        </Button>
+  mapEffortsToComponents() {
+    return Object.values(this.props.efforts).map((effort, index) => (
+      <Panel header={"Lance #" + (index + 1)} key={index}>
+        <Effort id={effort.id}/>
       </Panel>
-    );
-
-    this.setState({
-      efforts: this.state.efforts.concat([panel]),
-    });
+    ));
   }
 
   render() {
-    console.log(this.state);
-
     return (
       <div>
         <PageHeader>Nova viagem</PageHeader>
@@ -163,11 +83,13 @@ class InsertTrip extends React.Component {
               </FormGroup>
             </Col>
           </Row>
-          {this.state.efforts.length > 0 &&
+          {Object.keys(this.props.efforts).length > 0 &&
             <h3>Lances</h3>
           }
-          {this.state.efforts}
-          <Button onClick={() => this.createEffort()}>Novo lance</Button>
+
+          {this.mapEffortsToComponents()}
+
+          <Button>Novo lance</Button>
         </form>
       </div>
     )
@@ -176,7 +98,10 @@ class InsertTrip extends React.Component {
 
 const stateMapper = (state) => ({
   ports: state.ports,
-  ships: state.ships
+  ships: state.ships,
+  efforts: state.efforts,
 });
 
-export default connect(stateMapper, {fetchPorts, fetchShips})(InsertTrip);
+export default connect(stateMapper, {
+  fetchPorts, fetchShips, fetchFishes
+})(InsertTrip);

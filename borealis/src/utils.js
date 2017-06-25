@@ -61,10 +61,13 @@ export const extractFishes = (data) => {
 export const withFileChooser = (Component) => {
   return class extends React.Component {
     handleChange() {
+
       //Something was chosen
       if (this.fileInput.files && this.fileInput.files[0]) {
         this.props.onChoose(this.fileInput.files[0]);
       }
+
+      this.fileInput.value = null;
     }
 
     handleRef(ref) {
@@ -79,7 +82,7 @@ export const withFileChooser = (Component) => {
 
       return (
         <div>
-          <Component {...others} onClick={(e) => this.fileInput.click()}>
+          <Component {...others} onClick={() => this.fileInput.click()}>
             {children}
           </Component>
 

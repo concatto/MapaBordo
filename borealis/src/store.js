@@ -3,6 +3,7 @@ import { routerMiddleware, LOCATION_CHANGE } from 'react-router-redux';
 import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import thunk from 'redux-thunk';
+import { reducer as formReducer } from 'redux-form';
 
 export const history = createHistory();
 
@@ -27,20 +28,11 @@ const entityReducer = (prefix, state, action) => {
   }
 }
 
-const formReducer = (state={}, action) => {
-  switch (action.type) {
-    case "TOGGLE_TEST_REQUIRED":
-      return {shouldTestRequired: action.payload};
-    default:
-      return state;
-  }
-};
-
 export const store = createStore(combineReducers({
   ships: shipReducer,
   ports: portReducer,
   fishes: fishReducer,
   trips: tripReducer,
-  form: formReducer,
   summary: summaryReducer,
+  form: formReducer,
 }), middleware);

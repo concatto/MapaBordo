@@ -57,3 +57,12 @@ const dispatchData = (dispatch, reducer, data) => {
     payload: data
   });
 }
+
+export const postFish = (data) => (dispatch) => {
+  dispatch({type: "POST_START"});
+
+  axios.post("http://localhost:4000/especie", data)
+    .then((response) => {
+      dispatch({type: "POST_SUCCEEDED"});
+    });
+};
