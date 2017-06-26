@@ -116,10 +116,6 @@ body {
   align-self: flex-end;
 }
 
-.capture-row .btn {
-  font-size: 15px;
-}
-
 .main .row form .panel:first-of-type {
   margin-top: 20px;
 }

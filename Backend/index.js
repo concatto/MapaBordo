@@ -56,6 +56,60 @@ viagensRouter.get("/", (req, res) => {
 	});
 });
 
+viagensRouter.post("/", (req, res) => {
+	const tripData = [req.body.ship, req.body.sourcePort, req.body.destPort, req.body.tripStart, req.body.tripEnd];
+	//START TRANSACTION
+	db.tx(t => {
+		//Iniciamos inserindo a viagem recebida.
+		return t.any("INSERT INTO viagem (embarcacao_id, porto_saida_id, porto_chegada_id, data_saida, data_chegada) VALUES ($1, $2, $3, $4, $5) RETURNING id", tripData)
+			.then(data => {
+				//Assim que a viagem for inserida, precisamos inserir os lances, caso existam.
+				if (!req.body.efforts) return;
+				
+				//Inserimos todos os lances, utilizando o id retornado pela inserção da viagem
+				const efforts = req.body.efforts.map(effort => {
+					effort.trip = data[0].id;
+					effort.startTime = effort.date + " " + effort.startTime;
+					effort.endTime = effort.date + " " + effort.endTime;
+					
+					return t.any("INSERT INTO lance (viagem_id, hora_inicio, hora_fim, comprimento_rede, altura_rede, tamanho_malha, profundidade, latitude_inicial, longitude_inicial) VALUES (${trip}, ${startTime}, ${endTime}, ${netLength}, ${netHeight}, ${gridSize}, ${depth}, ${lat}, ${lng}) RETURNING id", effort)
+				});
+				
+				//Estamos prontos para disparar as inserções de lances.				
+				return t.batch(efforts).then(effortData => {
+					//Agora possuimos os ids dos lances inseridos. Cada um deles poderá causar a inserção de várias capturas.
+					var allCaptures = [];
+					
+					//Verificaremos cada um dos lances, coletando suas capturas, caso existam. Sabemos que pelo menos um lance existe, senão não chegaríamos aqui
+					req.body.efforts.forEach((effort, index) => {
+						if (!effort.captures) return;
+						
+						//Cada captura do lance irá gerar uma inserção na tabela de capturas, que deve utilizar o id retornado pela inserção em lote
+						effort.captures.forEach(capture => {
+							capture.effort = effortData[index][0].id;
+							
+							allCaptures.push(t.any("INSERT INTO captura (lance_id, especie_id, peso) VALUES (${effort}, ${fish}, ${weight})", capture));
+						});
+					});
+					
+					//Caso haja pelo menos uma captura em todos os lances, disparar todas as inserções
+					if (allCaptures.length > 0) {
+						return t.batch(allCaptures);
+					}
+				}).catch(err => {
+					console.log(err);
+				});
+			}).catch(err => {
+				console.log(err);
+			});
+	}).then(data => {
+		res.status(200).end();
+	}).catch(err => {
+		console.log(err);
+		res.status(500).json(err);
+	});
+});
+
 viagensRouter.get("/:id", (req, res) => {
 	db.any("SELECT * FROM viagens_hierarquicas v WHERE v.id = $1", req.params.id).then(data => {
 		res.status(200).json(toObject(data));

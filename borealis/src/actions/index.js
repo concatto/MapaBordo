@@ -69,6 +69,10 @@ export const postShip = (data) => (dispatch) => {
   postData(dispatch, "http://localhost:4000/embarcacao", data);
 };
 
+export const postTrip = (data) => (dispatch) => {
+  postData(dispatch, "http://localhost:4000/viagem", data);
+};
+
 const postData = (dispatch, url, data) => {
   dispatch({type: "POST_START"});
 
