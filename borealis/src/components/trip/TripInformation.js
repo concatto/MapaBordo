@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { fetchTrips } from '../../actions';
+import { fetchTrips, deleteTrip, openModal } from '../../actions';
 import Loader from '../Loader';
+import ConfirmationModal from '../ConfirmationModal';
 import { PageHeader, Panel, Button } from 'react-bootstrap';
 import { formatDateLong, formatDate, convertLatitude, convertLongitude } from '../../utils';
 
@@ -64,7 +65,7 @@ class TripInformation extends React.Component {
   }
 
   getContent() {
-    const { trip, ports, ships } = this.props;
+    const { trip, ports, ships, deleteTrip, openModal } = this.props;
 
     if (trip) {
       const saida = ports[trip.porto_saida_id];
@@ -78,7 +79,16 @@ class TripInformation extends React.Component {
           <p>Saída: {this.createLink("porto", saida)}. Data: {formatDateLong(trip.data_saida)}</p>
           <p>Chegada: {this.createLink("porto", chegada)}. Data: {formatDateLong(trip.data_chegada)}</p>
           {this.mapEffortsToComponents(trip.lances)}
-          <Button bsStyle="danger">Excluir viagem</Button>
+
+          <Button bsStyle="danger" onClick={() => openModal("trip-modal")}>
+            Excluir viagem
+          </Button>
+
+          <ConfirmationModal
+            name="trip-modal"
+            message="A viagem e todos os dados associados serão permanentemente excluídos. Deseja prosseguir?"
+            onAccept={() => deleteTrip(trip.id)}
+          />
         </div>
       )
     } else {
@@ -109,4 +119,4 @@ const stateMapper = (state, ownProps) => ({
   ships: state.ships.content,
 });
 
-export default withRouter(connect(stateMapper, {fetchTrips})(TripInformation));
+export default withRouter(connect(stateMapper, {fetchTrips, deleteTrip, openModal})(TripInformation));

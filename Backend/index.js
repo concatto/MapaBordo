@@ -56,6 +56,21 @@ viagensRouter.get("/", (req, res) => {
 	});
 });
 
+viagensRouter.delete("/:id", (req, res) => {
+	db.tx(t => {
+		return t.none("DELETE FROM captura WHERE captura.lance_id IN (SELECT lance.id FROM lance WHERE lance.viagem_id = ${id})", req.params).then(() => {
+			return t.none("DELETE FROM lance WHERE lance.viagem_id = ${id}", req.params).then(() => {
+				return t.none("DELETE FROM viagem WHERE viagem.id = ${id}", req.params);
+			});
+		});
+	}).then(() => {
+		res.status(200).end();
+	}).catch(err => {
+		console.log(err);
+		res.status(500).json(err);
+	});
+});
+
 viagensRouter.post("/", (req, res) => {
 	const tripData = [req.body.ship, req.body.sourcePort, req.body.destPort, req.body.tripStart, req.body.tripEnd];
 	//START TRANSACTION
@@ -135,7 +150,6 @@ embarcacoesRouter.post("/", (req, res) => {
 	db.any("INSERT INTO embarcacao (nome, tamanho) VALUES (${name}, ${size})", req.body).then(data => {
 		res.status(200).end();
 	}).catch(err => {
-		console.log(err);
 		res.status(500).json(err);
 	});
 });

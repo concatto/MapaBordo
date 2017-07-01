@@ -57,6 +57,27 @@ const dispatchData = (dispatch, reducer, data) => {
   });
 }
 
+export const openModal = (name) => {
+  return {type: "MODAL_OPEN", name};
+};
+
+export const closeModal = (name) => {
+  return {type: "MODAL_CLOSE", name};
+};
+
+export const toggleDisable = (name, disabled) => {
+  return {type: "MODAL_TOGGLE_DISABLE", name, disabled};
+}
+
+export const deleteTrip = (id) => (dispatch) => {
+  dispatch(toggleDisable("trip-modal", true));
+
+  axios.delete("http://localhost:4000/viagem/" + id).then((response) => {
+    dispatch(toggleDisable("trip-modal", false));
+    dispatch(closeModal("trip-modal"));
+  });
+};
+
 export const postFish = (data) => (dispatch) => {
   postData(dispatch, "http://localhost:4000/especie", data);
 };
