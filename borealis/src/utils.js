@@ -95,3 +95,15 @@ export const withFileChooser = (Component) => {
     }
   };
 }
+
+export const withTitle = (Component, title) => {
+  return class extends React.Component {
+    componentDidMount() {
+      document.title = title;
+    }
+
+    render() {
+      return <Component {...this.props}/>;
+    }
+  };
+};

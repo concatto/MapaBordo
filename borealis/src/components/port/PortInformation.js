@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchPorts } from '../../actions';
+import { fetchPorts, deletePort, openModal } from '../../actions';
+import ConfirmationModal from '../ConfirmationModal';
 import Loader from '../Loader';
 import { PageHeader, Panel, Button } from 'react-bootstrap';
 
@@ -11,15 +12,25 @@ class PortInformation extends React.Component {
   }
 
   getContent() {
-    const { port } = this.props;
-    
+    const { port, deletePort, openModal } = this.props;
+
     if (port) {
       return (
         <div>
           <PageHeader>{port.nome}</PageHeader>
           <p>Tipo de administração: {port.adm === 1 ? "Pública" : "Privada"}</p>
           <p>Ano de fundação: {port.ano_fundacao}</p>
-          <Button bsStyle="danger">Excluir porto</Button>
+
+          <Button bsStyle="danger" onClick={() => openModal("port-modal")}>
+            Excluir porto
+          </Button>
+
+          <ConfirmationModal
+            name="port-modal"
+            message="O porto será permanentemente removido. Certifique-se que nenhuma
+              viagem está relacionada à este porto. Deseja prosseguir?"
+            onAccept={() => deletePort(port.id)}
+          />
         </div>
       )
     } else {
@@ -47,4 +58,4 @@ const stateMapper = (state, ownProps) => ({
   fetching: state.ports.fetching,
 });
 
-export default withRouter(connect(stateMapper, {fetchPorts})(PortInformation));
+export default withRouter(connect(stateMapper, {fetchPorts, deletePort, openModal})(PortInformation));

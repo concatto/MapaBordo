@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Notifications from 'react-notification-system-redux';
 import { extractShips, extractPorts, extractFishes } from '../utils';
 
 export const fetchShips = (id) => (dispatch) => {
@@ -78,12 +79,43 @@ export const deleteTrip = (id) => (dispatch) => {
   });
 };
 
+export const deleteFish = (id) => (dispatch) => {
+  dispatch(toggleDisable("fish-modal", true));
+
+  axios.delete("http://localhost:4000/especie/" + id).then((response) => {
+    dispatch(toggleDisable("fish-modal", false));
+    dispatch(closeModal("fish-modal"));
+  });
+};
+
+export const deleteShip = (id) => (dispatch) => {
+  console.log("Hi");
+  dispatch(toggleDisable("ship-modal", true));
+
+  axios.delete("http://localhost:4000/embarcacao/" + id).then((response) => {
+    dispatch(toggleDisable("ship-modal", false));
+    dispatch(closeModal("ship-modal"));
+  });
+};
+
+export const deletePort = (id) => (dispatch) => {
+  dispatch(toggleDisable("port-modal", true));
+
+  axios.delete("http://localhost:4000/porto/" + id).then((response) => {
+    dispatch(toggleDisable("port-modal", false));
+    dispatch(closeModal("port-modal"));
+    dispatch(Notifications.success({message: "Porto removido com sucesso"}));
+  });
+};
+
 export const postFish = (data) => (dispatch) => {
   postData(dispatch, "http://localhost:4000/especie", data);
 };
 
 export const postPort = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/porto", data);
+  postData(dispatch, "http://localhost:4000/porto", data, () => {
+    dispatch(Notifications.success({message: "Porto cadastrado com sucesso", autoDismiss: 0}));
+  });
 };
 
 export const postShip = (data) => (dispatch) => {
@@ -94,10 +126,11 @@ export const postTrip = (data) => (dispatch) => {
   postData(dispatch, "http://localhost:4000/viagem", data);
 };
 
-const postData = (dispatch, url, data) => {
+const postData = (dispatch, url, data, onSuccess) => {
   dispatch({type: "POST_START"});
 
   axios.post(url, data).then((response) => {
     dispatch({type: "POST_SUCCEEDED"});
+    if (onSuccess) onSuccess();
   });
 };

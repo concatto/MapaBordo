@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchFishes } from '../../actions';
+import { fetchFishes, deleteFish, openModal } from '../../actions';
+import ConfirmationModal from '../ConfirmationModal';
 import Loader from '../Loader';
 import { PageHeader, Panel, Button, Row, Col, Thumbnail } from 'react-bootstrap';
 
@@ -19,7 +20,7 @@ class FishInformation extends React.Component {
   }
 
   getContent() {
-    const { fish } = this.props;
+    const { fish, deleteFish, openModal } = this.props;
 
     if (fish) {
       return (
@@ -35,7 +36,15 @@ class FishInformation extends React.Component {
               </Row>
             </div>
           }
-          <Button bsStyle="danger">Excluir espécie</Button>
+          <Button bsStyle="danger" onClick={() => openModal("fish-modal")}>
+            Excluir espécie
+          </Button>
+
+          <ConfirmationModal
+            name="fish-modal"
+            message="A espécie e todas as fotografias relacionadas serão removidas. Deseja prosseguir?"
+            onAccept={() => deleteFish(fish.id)}
+          />
         </div>
       )
     } else {
@@ -63,4 +72,4 @@ const stateMapper = (state, ownProps) => ({
   fetching: state.fishes.fetching,
 });
 
-export default withRouter(connect(stateMapper, {fetchFishes})(FishInformation));
+export default withRouter(connect(stateMapper, {fetchFishes, deleteFish, openModal})(FishInformation));

@@ -4,6 +4,7 @@ import { createLogger } from 'redux-logger';
 import createHistory from 'history/createBrowserHistory';
 import thunk from 'redux-thunk';
 import { reducer as formReducer } from 'redux-form';
+import { reducer as notifications } from 'react-notification-system-redux';
 
 export const history = createHistory();
 
@@ -35,6 +36,8 @@ const modalReducer = (state={}, action) => {
       return {...state, [action.name]: {...state[action.name], open: (action.type === "MODAL_OPEN")}};
     case "MODAL_TOGGLE_DISABLE":
       return {...state, [action.name]: {...state[action.name], disabled: action.disabled}};
+    case LOCATION_CHANGE:
+      return {};
     default:
       return state;
   }
@@ -48,4 +51,5 @@ export const store = createStore(combineReducers({
   summary: summaryReducer,
   form: formReducer,
   modal: modalReducer,
+  notifications,
 }), middleware);

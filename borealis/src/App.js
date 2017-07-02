@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { Route, Switch } from 'react-router-dom';
 import { store, history } from './store';
 import { Grid, Row, Col } from 'react-bootstrap';
+import { withTitle } from './utils';
 import NavigationBar from './components/NavigationBar';
+import Notifications from 'react-notification-system-redux';
 import routes from './routeConfig';
 
-const withTitle = (Component, title) => {
-  return class extends React.Component {
-    componentDidMount() {
-      document.title = title;
-    }
+let NotificationRoot = ({notifications}) => (
+  <Notifications notifications={notifications}/>
+);
 
-    render() {
-      return <Component {...this.props}/>;
-    }
-  };
-};
+NotificationRoot = connect((state) => ({
+  notifications: state.notifications
+}))(NotificationRoot);
+
 
 class App extends Component {
   constructor(props) {
@@ -48,6 +47,8 @@ class App extends Component {
                 </Col>
               </Row>
             </Grid>
+
+            <NotificationRoot/>
           </div>
         </ConnectedRouter>
       </Provider>

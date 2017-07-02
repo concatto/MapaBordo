@@ -57,12 +57,17 @@ viagensRouter.get("/", (req, res) => {
 });
 
 viagensRouter.delete("/:id", (req, res) => {
+	//Início da transação
 	db.tx(t => {
+		//Primeiramente, remover as capturas dos lances da viagem.
 		return t.none("DELETE FROM captura WHERE captura.lance_id IN (SELECT lance.id FROM lance WHERE lance.viagem_id = ${id})", req.params).then(() => {
+			//Em segundo lugar, remover os lances da viagem.
 			return t.none("DELETE FROM lance WHERE lance.viagem_id = ${id}", req.params).then(() => {
+				//Por fim, remover a própria viagem.
 				return t.none("DELETE FROM viagem WHERE viagem.id = ${id}", req.params);
 			});
 		});
+		//Fim da transação
 	}).then(() => {
 		res.status(200).end();
 	}).catch(err => {
@@ -146,6 +151,14 @@ embarcacoesRouter.get("/", (req, res) => {
 	});
 });
 
+embarcacoesRouter.delete("/:id", (req, res) => {
+	db.none("DELETE FROM embarcacao WHERE id = ${id}", req.params).then(data => {
+		res.status(200).end();
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
 embarcacoesRouter.post("/", (req, res) => {
 	db.any("INSERT INTO embarcacao (nome, tamanho) VALUES (${name}, ${size})", req.body).then(data => {
 		res.status(200).end();
@@ -170,6 +183,14 @@ const portosRouter = express.Router();
 portosRouter.get("/", (req, res) => {
 	db.any("SELECT * FROM porto").then(data => {
 		res.status(200).json(toObject(data));
+	}).catch(err => {
+		res.status(500).json(err);
+	});
+});
+
+portosRouter.delete("/:id", (req, res) => {
+	db.none("DELETE FROM porto WHERE id = ${id}", req.params).then(data => {
+		res.status(200).end();
 	}).catch(err => {
 		res.status(500).json(err);
 	});
@@ -207,6 +228,28 @@ especiesRouter.get("/", (req, res) => {
 	});
 });
 
+especiesRouter.delete("/:id", (req, res) => {
+	db.tx(t => {
+		return t.any("DELETE FROM fotografia WHERE especie_id = ${id} RETURNING caminho", req.params).then(data => {
+			return t.batch([
+				data,
+				t.none("DELETE FROM especie WHERE id = ${id}", req.params)				
+			]);
+		});
+	}).then(data => {
+		data[0].forEach(image => {
+			fs.unlink("C:/Users/Fernando/MapaBordo/borealis/public" + image.caminho, err => {
+				console.log(err);
+			});
+		});
+		
+		res.status(200).json(data);
+	}).catch(err => {
+		console.log(err);
+		res.status(500).json(err);
+	});
+});
+
 especiesRouter.post("/", (req, res) => {
 	db.tx(t => {
 		//BEGIN TRANSACTION
@@ -223,7 +266,6 @@ especiesRouter.post("/", (req, res) => {
 						const name = shortid.generate();
 						const fullName = saveBase64("C:/Users/Fernando/MapaBordo/borealis/public/assets/", name, item.image); //TODO relativo
 						
-						console.log("Inside " + id);
 						return t.none("INSERT INTO fotografia (caminho, especie_id) VALUES ($1, $2)", ["/assets/" + fullName, id]);
 					});
 					

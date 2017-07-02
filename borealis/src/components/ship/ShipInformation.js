@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { fetchShips } from '../../actions';
+import { fetchShips, deleteShip, openModal } from '../../actions';
+import ConfirmationModal from '../ConfirmationModal';
 import Loader from '../Loader';
 import { PageHeader, Panel, Button } from 'react-bootstrap';
 
@@ -11,12 +12,24 @@ class ShipInformation extends React.Component {
   }
 
   getContent() {
-    if (this.props.ship) {
+    const { ship, deleteShip, openModal } = this.props;
+
+    if (ship) {
       return (
         <div>
-          <PageHeader>Embarcação: {this.props.ship.nome}</PageHeader>
-          <p>Tamanho da embarcação: {this.props.ship.tamanho.toFixed(2)} metros cúbicos</p>
-          <Button bsStyle="danger">Excluir embarcação</Button>
+          <PageHeader>Embarcação: {ship.nome}</PageHeader>
+          <p>Tamanho da embarcação: {ship.tamanho.toFixed(2)} metros cúbicos</p>
+
+          <Button bsStyle="danger" onClick={() => openModal("ship-modal")}>
+            Excluir embarcação
+          </Button>
+
+          <ConfirmationModal
+            name="ship-modal"
+            message="A embarcação será permanentemente removida. Certifique-se que nenhuma viagem na
+              base de dados tenha sido realizada com esta embarcação. Deseja prosseguir?"
+            onAccept={() => deleteShip(ship.id)}
+          />
         </div>
       )
     } else {
@@ -44,4 +57,4 @@ const stateMapper = (state, ownProps) => ({
   fetching: state.ships.fetching,
 });
 
-export default withRouter(connect(stateMapper, {fetchShips})(ShipInformation));
+export default withRouter(connect(stateMapper, {fetchShips, openModal, deleteShip})(ShipInformation));
