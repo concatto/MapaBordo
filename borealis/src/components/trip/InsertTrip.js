@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { fetchShips, fetchPorts, fetchFishes, postTrip } from '../../actions';
-import { Button, PageHeader, FormGroup, ControlLabel, FormControl, Row, Col, Panel, ButtonToolbar, Glyphicon } from 'react-bootstrap';
+import { Button, PageHeader, FormGroup, ControlLabel, Row, Col, Panel, ButtonToolbar, Glyphicon } from 'react-bootstrap';
 import Input from '../Input';
 import { reduxForm, Field, FieldArray } from 'redux-form';
 

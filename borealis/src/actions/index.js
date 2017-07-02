@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Notifications from 'react-notification-system-redux';
 import { extractShips, extractPorts, extractFishes } from '../utils';
+import { push } from 'react-router-redux';
 
 export const fetchShips = (id) => (dispatch) => {
   fetchData(dispatch, id, "http://localhost:4000/embarcacao", "ships");
@@ -71,66 +72,111 @@ export const toggleDisable = (name, disabled) => {
 }
 
 export const deleteTrip = (id) => (dispatch) => {
-  dispatch(toggleDisable("trip-modal", true));
-
-  axios.delete("http://localhost:4000/viagem/" + id).then((response) => {
-    dispatch(toggleDisable("trip-modal", false));
-    dispatch(closeModal("trip-modal"));
+  deleteEntity(dispatch, id, "http://localhost:4000/viagem", "trip-modal", () => {
+    dispatch(notify("success", "Viagem removida com sucesso."));
+    dispatch(push("/visualizar/viagem"));
+  }, () => {
+    dispatch(notify("error", "Falha ao remover a viagem."));
   });
 };
 
 export const deleteFish = (id) => (dispatch) => {
-  dispatch(toggleDisable("fish-modal", true));
-
-  axios.delete("http://localhost:4000/especie/" + id).then((response) => {
-    dispatch(toggleDisable("fish-modal", false));
-    dispatch(closeModal("fish-modal"));
+  deleteEntity(dispatch, id, "http://localhost:4000/especie", "fish-modal", () => {
+    dispatch(notify("success", "Espécie removida com sucesso."));
+    dispatch(push("/visualizar/especie"));
+  }, (err) => {
+    dispatch(notify("error", withDetail("Falha ao remover a espécie.", err)));
   });
 };
 
 export const deleteShip = (id) => (dispatch) => {
-  console.log("Hi");
-  dispatch(toggleDisable("ship-modal", true));
-
-  axios.delete("http://localhost:4000/embarcacao/" + id).then((response) => {
-    dispatch(toggleDisable("ship-modal", false));
-    dispatch(closeModal("ship-modal"));
+  deleteEntity(dispatch, id, "http://localhost:4000/embarcacao", "ship-modal", () => {
+    dispatch(notify("success", "Embarcação removida com sucesso."));
+    dispatch(push("/visualizar/embarcacao"));
+  }, (err) => {
+    dispatch(notify("error", withDetail("Falha ao remover a embarcação.", err)));
   });
 };
 
 export const deletePort = (id) => (dispatch) => {
-  dispatch(toggleDisable("port-modal", true));
-
-  axios.delete("http://localhost:4000/porto/" + id).then((response) => {
-    dispatch(toggleDisable("port-modal", false));
-    dispatch(closeModal("port-modal"));
-    dispatch(Notifications.success({message: "Porto removido com sucesso"}));
+  deleteEntity(dispatch, id, "http://localhost:4000/porto", "port-modal", () => {
+    dispatch(notify("success", "Porto removido com sucesso."));
+    dispatch(push("/visualizar/porto"));
+  }, (err) => {
+    console.log(err);
+    dispatch(notify("error", withDetail("Falha ao remover o porto.", err)));
   });
 };
 
+const deleteEntity = (dispatch, id, url, modalName, onSuccess, onFailed) => {
+  dispatch(toggleDisable(modalName, true));
+  dispatch({type: "DELETE_START"});
+
+  axios.delete(url + "/" + id).then((response) => {
+    dispatch({type: "DELETE_SUCCEEDED", response});
+    if (onSuccess) onSuccess(response);
+  }).catch((error) => {
+    dispatch({type: "DELETE_FAILED", error});
+    if (onFailed) onFailed(error.response.data);
+  }).then(() => {
+    dispatch(toggleDisable(modalName, false));
+    dispatch(closeModal(modalName));
+  });
+}
+
+
 export const postFish = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/especie", data);
+  postData(dispatch, "http://localhost:4000/especie", data, () => {
+    dispatch(notify("success", "Espécie cadastrada com sucesso!"));
+    dispatch(push("/cadastrar"));
+  }, (err) => {
+    dispatch(notify("error", "Erro ao cadastrar a nova espécie."));
+  });
 };
 
 export const postPort = (data) => (dispatch) => {
   postData(dispatch, "http://localhost:4000/porto", data, () => {
-    dispatch(Notifications.success({message: "Porto cadastrado com sucesso", autoDismiss: 0}));
+    dispatch(notify("success", "Porto cadastrado com sucesso!"));
+    dispatch(push("/cadastrar"));
+  }, (err) => {
+    dispatch(notify("error", "Erro ao cadastrar o novo porto."));
   });
 };
 
 export const postShip = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/embarcacao", data);
+  postData(dispatch, "http://localhost:4000/embarcacao", data, () => {
+    dispatch(notify("success", "Embarcação cadastrada com sucesso!"));
+    dispatch(push("/cadastrar"));
+  }, (err) => {
+    dispatch(notify("error", "Erro ao cadastrar a nova embarcação."));
+  });
 };
 
 export const postTrip = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/viagem", data);
+  postData(dispatch, "http://localhost:4000/viagem", data, () => {
+    dispatch(notify("success", "Viagem cadastrada com sucesso!"));
+    dispatch(push("/cadastrar"));
+  }, (err) => {
+    dispatch(notify("error", "Erro ao cadastrar a nova viagem."));
+  });
 };
 
-const postData = (dispatch, url, data, onSuccess) => {
+const withDetail = (message, details) => (
+  message + ((details && details.detailedMessage) ? (" Mensagem: " + details.detailedMessage) : "")
+);
+
+const postData = (dispatch, url, data, onSuccess, onFailed) => {
   dispatch({type: "POST_START"});
 
   axios.post(url, data).then((response) => {
-    dispatch({type: "POST_SUCCEEDED"});
-    if (onSuccess) onSuccess();
+    dispatch({type: "POST_SUCCEEDED", response});
+    if (onSuccess) onSuccess(response);
+  }).catch((error) => {
+    dispatch({type: "POST_FAILED", error});
+    if (onFailed) onFailed(error);
   });
 };
+
+const notify = (level, message) => (
+  Notifications.show({message, position: "tc", autoDismiss: 4}, level)
+);

@@ -155,6 +155,9 @@ embarcacoesRouter.delete("/:id", (req, res) => {
 	db.none("DELETE FROM embarcacao WHERE id = ${id}", req.params).then(data => {
 		res.status(200).end();
 	}).catch(err => {
+		if (err.code == 23503) {
+			err.detailedMessage = "Ainda existem viagens que dependem desta embarcação.";
+		}
 		res.status(500).json(err);
 	});
 });
@@ -192,6 +195,9 @@ portosRouter.delete("/:id", (req, res) => {
 	db.none("DELETE FROM porto WHERE id = ${id}", req.params).then(data => {
 		res.status(200).end();
 	}).catch(err => {
+		if (err.code == 23503) {
+			err.detailedMessage = "Ainda existem viagens que dependem deste porto.";
+		}
 		res.status(500).json(err);
 	});
 });
@@ -245,7 +251,9 @@ especiesRouter.delete("/:id", (req, res) => {
 		
 		res.status(200).json(data);
 	}).catch(err => {
-		console.log(err);
+		if (err.code == 23503) {
+			err.detailedMessage = "Ainda existem viagens que contém esta espécie.";
+		}
 		res.status(500).json(err);
 	});
 });
