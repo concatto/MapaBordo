@@ -4,6 +4,8 @@ import { fetchShips, fetchPorts, fetchFishes, postTrip } from '../../actions';
 import { Button, PageHeader, FormGroup, ControlLabel, Row, Col, Panel, ButtonToolbar, Glyphicon } from 'react-bootstrap';
 import Input from '../Input';
 import { reduxForm, Field, FieldArray } from 'redux-form';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
 const mapEntityToOptions = (entity, id = "id", name = "nome") => {
   if (!entity) {
@@ -55,6 +57,17 @@ class Captures extends React.Component {
   }
 }
 
+const TimeInput = ({input, label, width}) => {
+  return (
+    <Col xs={width}>
+      <FormGroup>
+        <ControlLabel>{label}</ControlLabel>
+        <TimePicker showSecond={false} onChange={(v) => input.onChange(v && v.format("HH:mm"))}/>
+      </FormGroup>
+    </Col>
+  );
+}
+
 const CapturesContainer = connect(state => ({fishes: state.fishes}))(Captures);
 
 class Efforts extends React.Component {
@@ -68,8 +81,8 @@ class Efforts extends React.Component {
           <Panel header={"Lance #" + (index + 1)} key={index}>
             <Row>
               <Field name={item + ".date"} component={Input} type="date" label="Data" width={4}/>
-              <Field name={item + ".startTime"} component={Input} label="Hora de início (HH:MM)" width={4}/>
-              <Field name={item + ".endTime"} component={Input} label="Hora de término (HH:MM)" width={4}/>
+              <Field name={item + ".startTime"} component={TimeInput} label="Hora de início (HH:MM)" width={4}/>
+              <Field name={item + ".endTime"} component={TimeInput} label="Hora de término (HH:MM)" width={4}/>
             </Row>
 
             <Row>
@@ -97,12 +110,20 @@ class Efforts extends React.Component {
 
         <ButtonToolbar>
           <Button onClick={() => fields.push({})}>Novo lance</Button>
-          <Button type="submit" bsStyle="success">Cadastrar</Button>
+          <Button type="submit" bsStyle="success" disabled={this.props.busy}>Cadastrar</Button>
         </ButtonToolbar>
       </div>
     );
   }
 }
+
+const effortStateMapper = (state, ownProps) => ({
+  ...ownProps,
+  busy: state.post.busy
+});
+
+const EffortsContainer = connect(effortStateMapper)(Efforts);
+
 
 const TripForm = ({handleSubmit, ships, ports}) => (
   <form onSubmit={handleSubmit}>
@@ -141,7 +162,7 @@ const TripForm = ({handleSubmit, ships, ports}) => (
 
       <Field name="tripEnd" component={Input} type="date" width={4} label="Data de chegada"/>
     </Row>
-    <FieldArray name="efforts" component={Efforts}/>
+    <FieldArray name="efforts" component={EffortsContainer}/>
   </form>
 );
 

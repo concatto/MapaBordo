@@ -15,7 +15,7 @@ class ShipForm extends React.Component {
         <Row>
           <Field name="size" component={Input} label="Tamanho da embarcação" real width={4}/>
         </Row>
-        <Button bsStyle="success" type="submit">Cadastrar</Button>
+        <Button bsStyle="success" type="submit" disabled={this.props.busy}>Cadastrar</Button>
       </form>
     );
   }
@@ -32,10 +32,12 @@ class InsertShip extends React.Component {
     return (
       <div>
         <PageHeader>Nova embarcação</PageHeader>
-        <ShipFormContainer onSubmit={(d) => this.handleSubmit(d)}/>
+        <ShipFormContainer busy={this.props.busy} onSubmit={(d) => this.handleSubmit(d)}/>
       </div>
     );
   }
 }
 
-export default connect(undefined, {postShip})(InsertShip);
+export default connect((state) => ({
+  busy: state.post.busy
+}), {postShip})(InsertShip);

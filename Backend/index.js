@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const pgp = require("pg-promise")();
 const fs = require("fs");
+const path = require("path");
 const shortid = require("shortid");
 
 function toObject(data) {
@@ -17,7 +18,7 @@ function saveBase64(path, name, data) {
 	var regex = /^data:image\/([a-zA-Z]+);base64,/;
 	var matches = data.match(regex);
 	var replaced = data.replace(regex, "");
-	var fullPath = path + name + "." + matches[1];
+	var fullPath = path + "/" + name + "." + matches[1];
 	
 	fs.writeFile(fullPath, replaced, "base64", err => {
 		console.log(err);
@@ -235,23 +236,28 @@ especiesRouter.get("/", (req, res) => {
 });
 
 especiesRouter.delete("/:id", (req, res) => {
+	//Início da transação
 	db.tx(t => {
+		//Remover todas as fotografias deste peixe, retornando o caminho de cada imagem
 		return t.any("DELETE FROM fotografia WHERE especie_id = ${id} RETURNING caminho", req.params).then(data => {
+			//Em seguida, remover o peixe em si, e encaminhar os caminhos para o próximo estágio
 			return t.batch([
 				data,
-				t.none("DELETE FROM especie WHERE id = ${id}", req.params)				
+				t.none("DELETE FROM especie WHERE id = ${id}", req.params)
 			]);
 		});
+		//Fim da transação
 	}).then(data => {
+		//Deletar as fotografias a partir dos caminhos retornados
 		data[0].forEach(image => {
-			fs.unlink("C:/Users/Fernando/MapaBordo/borealis/public" + image.caminho, err => {
+			fs.unlink(path.resolve(__dirname, "../borealis/public") + image.caminho, err => {
 				console.log(err);
 			});
 		});
 		
 		res.status(200).json(data);
 	}).catch(err => {
-		if (err.code == 23503) {
+		if (err.first.code == 23503) {
 			err.detailedMessage = "Ainda existem viagens que contém esta espécie.";
 		}
 		res.status(500).json(err);
@@ -272,7 +278,7 @@ especiesRouter.post("/", (req, res) => {
 					//Gravar os arquivos no disco e mapear para INSERTs
 					const queries = req.body.photos.map(item => {
 						const name = shortid.generate();
-						const fullName = saveBase64("C:/Users/Fernando/MapaBordo/borealis/public/assets/", name, item.image); //TODO relativo
+						const fullName = saveBase64(path.resolve(__dirname, "../borealis/public/assets"), name, item.image);
 						
 						return t.none("INSERT INTO fotografia (caminho, especie_id) VALUES ($1, $2)", ["/assets/" + fullName, id]);
 					});
@@ -336,11 +342,15 @@ relatorioRouter.get("/embarcacoes", (req, res) => {
 var app = express();
 app.use(enableCors);
 app.use(bodyParser.json({limit: "20mb"}));
-app.use("/viagem", viagensRouter);
-app.use("/embarcacao", embarcacoesRouter);
-app.use("/porto", portosRouter);
-app.use("/especie", especiesRouter);
-app.use("/relatorio", relatorioRouter);
+app.use("/api/viagem", viagensRouter);
+app.use("/api/embarcacao", embarcacoesRouter);
+app.use("/api/porto", portosRouter);
+app.use("/api/especie", especiesRouter);
+app.use("/api/relatorio", relatorioRouter);
+
+
 
 var server = http.createServer(app);
-server.listen("4000");
+server.listen("4000", () => {
+	console.log("Now listening.");
+});

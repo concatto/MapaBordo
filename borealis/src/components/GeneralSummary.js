@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchGeneralSummary } from '../actions';
 import Loader from './Loader';
-import { Table, PageHeader } from 'react-bootstrap';
+import { PageHeader } from 'react-bootstrap';
+import { Table, Tr, Td, Thead, Th } from 'reactable';
 
 class GeneralSummary extends React.Component {
   componentDidMount() {
@@ -15,13 +16,13 @@ class GeneralSummary extends React.Component {
     }
 
     return Object.values(this.props.content).map((item, index) => (
-      <tr key={index}>
-        <td>{item.mes}</td>
-        <td>{item.ano}</td>
-        <td>{item.embarcacoes_distintas}</td>
-        <td>{item.qtd_viagens}</td>
-        <td>{item.total_peso}</td>
-      </tr>
+      <Tr key={index}>
+        <Td column="month">{item.mes}</Td>
+        <Td column="year">{item.ano}</Td>
+        <Td column="ships">{item.embarcacoes_distintas}</Td>
+        <Td column="trips">{item.qtd_viagens}</Td>
+        <Td column="weight">{item.total_peso}</Td>
+      </Tr>
     ));
   }
 
@@ -30,19 +31,15 @@ class GeneralSummary extends React.Component {
       <div>
         <PageHeader>Relatório de atividade geral</PageHeader>
         <Loader fetching={this.props.fetching}>
-          <Table bordered>
-            <thead>
-              <tr>
-                <th>Mês</th>
-                <th>Ano</th>
-                <th>Embarcações distintas</th>
-                <th>Quantidade de viagens</th>
-                <th>Peso total (kg)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.mapDataToRows()}
-            </tbody>
+          <Table sortable={true} className="table table-bordered table-hover">
+            <Thead>
+              <Th column="month">Mês</Th>
+              <Th column="year">Ano</Th>
+              <Th column="ships">Embarcações distintas</Th>
+              <Th column="trips">Quantidade de viagens</Th>
+              <Th column="weight">Peso total (kg)</Th>
+            </Thead>
+            {this.mapDataToRows()}
           </Table>
         </Loader>
       </div>

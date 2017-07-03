@@ -43,7 +43,21 @@ const modalReducer = (state={}, action) => {
   }
 }
 
+const postReducer = (state={busy: false}, action) => {
+  switch (action.type) {
+    case "POST_START":
+      return {busy: true};
+    case "POST_SUCCEEDED":
+    case "POST_FAILED":
+    case LOCATION_CHANGE:
+      return {busy: false};
+    default:
+      return state;
+  }
+}
+
 export const store = createStore(combineReducers({
+  post: postReducer,
   ships: shipReducer,
   ports: portReducer,
   fishes: fishReducer,

@@ -33,7 +33,7 @@ class PortForm extends React.Component {
 
         </Row>
 
-        <Button type="submit" bsStyle="success">Cadastrar</Button>
+        <Button type="submit" bsStyle="success" disabled={this.props.busy}>Cadastrar</Button>
       </form>
     );
   }
@@ -53,10 +53,12 @@ class InsertPort extends React.Component {
     return (
       <div>
         <PageHeader>Novo porto</PageHeader>
-        <PortFormContainer onSubmit={(d) => this.handleSubmit(d)}/>
+        <PortFormContainer busy={this.props.busy} onSubmit={(d) => this.handleSubmit(d)}/>
       </div>
     );
   }
 }
 
-export default connect(undefined, {postPort})(InsertPort);
+export default connect((state) => ({
+  busy: state.post.busy
+}), {postPort})(InsertPort);

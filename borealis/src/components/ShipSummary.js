@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchShipSummary } from '../actions';
 import Loader from './Loader';
-import { Table, PageHeader } from 'react-bootstrap';
+import { PageHeader } from 'react-bootstrap';
+import { Table, Thead, Th, Tr, Td } from 'reactable';
 
 class ShipSummary extends React.Component {
   componentDidMount() {
@@ -15,12 +16,12 @@ class ShipSummary extends React.Component {
     }
 
     return Object.values(this.props.content).map((item, index) => (
-      <tr key={index}>
-        <td>{item.nome}</td>
-        <td>{item.mes}</td>
-        <td>{item.ano}</td>
-        <td>{item.total_capturado}</td>
-      </tr>
+      <Tr key={index}>
+        <Td column="name">{item.nome}</Td>
+        <Td column="month">{item.mes}</Td>
+        <Td column="year">{item.ano}</Td>
+        <Td column="weight">{item.total_capturado}</Td>
+      </Tr>
     ));
   }
 
@@ -29,18 +30,14 @@ class ShipSummary extends React.Component {
       <div>
         <PageHeader>Relatório de atividade por embarcação</PageHeader>
         <Loader fetching={this.props.fetching}>
-          <Table bordered>
-            <thead>
-              <tr>
-                <th>Nome da embarcação</th>
-                <th>Mês</th>
-                <th>Ano</th>
-                <th>Peso total capturado (kg)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.mapDataToRows()}
-            </tbody>
+          <Table sortable className="table table-hover table-bordered">
+            <Thead>
+              <Th column="name">Nome da embarcação</Th>
+              <Th column="month">Mês</Th>
+              <Th column="year">Ano</Th>
+              <Th column="weight">Peso total capturado (kg)</Th>
+            </Thead>
+            {this.mapDataToRows()}
           </Table>
         </Loader>
       </div>

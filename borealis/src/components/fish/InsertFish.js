@@ -13,10 +13,12 @@ class InsertFish extends React.Component {
     return (
       <div className="entity-information">
         <PageHeader>Nova espécie</PageHeader>
-        <FishForm onSubmit={(d) => this.onSubmit(d)}/>
+        <FishForm busy={this.props.busy} onSubmit={(d) => this.onSubmit(d)}/>
       </div>
     );
   }
 };
 
-export default connect(undefined, {postFish})(InsertFish);
+export default connect((state) => ({
+  busy: state.post.busy
+}), {postFish})(InsertFish);

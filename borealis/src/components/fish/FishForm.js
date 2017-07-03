@@ -63,7 +63,7 @@ class FishForm extends React.Component {
           <Field type="number" real name="maxDepth" label="Profundidade máxima" component={Input} width={4}/>
         </Row>
         <FieldArray component={ImageGroup} name="photos"/>
-        <Button type="submit" bsStyle="success">Cadastrar</Button>
+        <Button type="submit" bsStyle="success" disabled={this.props.busy}>Cadastrar</Button>
       </form>
     );
   }

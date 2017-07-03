@@ -4,19 +4,19 @@ import { extractShips, extractPorts, extractFishes } from '../utils';
 import { push } from 'react-router-redux';
 
 export const fetchShips = (id) => (dispatch) => {
-  fetchData(dispatch, id, "http://localhost:4000/embarcacao", "ships");
+  fetchData(dispatch, id, "http://localhost:4000/api/embarcacao", "ships");
 };
 
 export const fetchPorts = (id) => (dispatch) => {
-  fetchData(dispatch, id, "http://localhost:4000/porto", "ports");
+  fetchData(dispatch, id, "http://localhost:4000/api/porto", "ports");
 };
 
 export const fetchFishes = (id) => (dispatch) => {
-  fetchData(dispatch, id, "http://localhost:4000/especie", "fishes");
+  fetchData(dispatch, id, "http://localhost:4000/api/especie", "fishes");
 };
 
 export const fetchTrips = (id) => (dispatch) => {
-  fetchData(dispatch, id, "http://localhost:4000/viagem", "trips", (data) => {
+  fetchData(dispatch, id, "http://localhost:4000/api/viagem", "trips", (data) => {
 
     //THIS IS MADNESS!
     dispatchData(dispatch, "ships", extractShips(data));
@@ -27,15 +27,15 @@ export const fetchTrips = (id) => (dispatch) => {
 };
 
 export const fetchGeneralSummary = () => (dispatch) => {
-  fetchData(dispatch, null, "http://localhost:4000/relatorio/geral", "summary");
+  fetchData(dispatch, null, "http://localhost:4000/api/relatorio/geral", "summary");
 }
 
 export const fetchFishSummary = () => (dispatch) => {
-  fetchData(dispatch, null, "http://localhost:4000/relatorio/especies", "summary");
+  fetchData(dispatch, null, "http://localhost:4000/api/relatorio/especies", "summary");
 }
 
 export const fetchShipSummary = () => (dispatch) => {
-  fetchData(dispatch, null, "http://localhost:4000/relatorio/embarcacoes", "summary");
+  fetchData(dispatch, null, "http://localhost:4000/api/relatorio/embarcacoes", "summary");
 }
 
 const fetchData = (dispatch, id, url, reducer, onSuccess) => {
@@ -49,6 +49,8 @@ const fetchData = (dispatch, id, url, reducer, onSuccess) => {
     } else {
       dispatchData(dispatch, reducer, response.data);
     }
+  }).catch((error) => {
+    console.log(error);
   });
 }
 
@@ -72,7 +74,7 @@ export const toggleDisable = (name, disabled) => {
 }
 
 export const deleteTrip = (id) => (dispatch) => {
-  deleteEntity(dispatch, id, "http://localhost:4000/viagem", "trip-modal", () => {
+  deleteEntity(dispatch, id, "http://localhost:4000/api/viagem", "trip-modal", () => {
     dispatch(notify("success", "Viagem removida com sucesso."));
     dispatch(push("/visualizar/viagem"));
   }, () => {
@@ -81,7 +83,7 @@ export const deleteTrip = (id) => (dispatch) => {
 };
 
 export const deleteFish = (id) => (dispatch) => {
-  deleteEntity(dispatch, id, "http://localhost:4000/especie", "fish-modal", () => {
+  deleteEntity(dispatch, id, "http://localhost:4000/api/especie", "fish-modal", () => {
     dispatch(notify("success", "Espécie removida com sucesso."));
     dispatch(push("/visualizar/especie"));
   }, (err) => {
@@ -90,7 +92,7 @@ export const deleteFish = (id) => (dispatch) => {
 };
 
 export const deleteShip = (id) => (dispatch) => {
-  deleteEntity(dispatch, id, "http://localhost:4000/embarcacao", "ship-modal", () => {
+  deleteEntity(dispatch, id, "http://localhost:4000/api/embarcacao", "ship-modal", () => {
     dispatch(notify("success", "Embarcação removida com sucesso."));
     dispatch(push("/visualizar/embarcacao"));
   }, (err) => {
@@ -99,7 +101,7 @@ export const deleteShip = (id) => (dispatch) => {
 };
 
 export const deletePort = (id) => (dispatch) => {
-  deleteEntity(dispatch, id, "http://localhost:4000/porto", "port-modal", () => {
+  deleteEntity(dispatch, id, "http://localhost:4000/api/porto", "port-modal", () => {
     dispatch(notify("success", "Porto removido com sucesso."));
     dispatch(push("/visualizar/porto"));
   }, (err) => {
@@ -126,7 +128,7 @@ const deleteEntity = (dispatch, id, url, modalName, onSuccess, onFailed) => {
 
 
 export const postFish = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/especie", data, () => {
+  postData(dispatch, "http://localhost:4000/api/especie", data, () => {
     dispatch(notify("success", "Espécie cadastrada com sucesso!"));
     dispatch(push("/cadastrar"));
   }, (err) => {
@@ -135,7 +137,7 @@ export const postFish = (data) => (dispatch) => {
 };
 
 export const postPort = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/porto", data, () => {
+  postData(dispatch, "http://localhost:4000/api/porto", data, () => {
     dispatch(notify("success", "Porto cadastrado com sucesso!"));
     dispatch(push("/cadastrar"));
   }, (err) => {
@@ -144,7 +146,7 @@ export const postPort = (data) => (dispatch) => {
 };
 
 export const postShip = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/embarcacao", data, () => {
+  postData(dispatch, "http://localhost:4000/api/embarcacao", data, () => {
     dispatch(notify("success", "Embarcação cadastrada com sucesso!"));
     dispatch(push("/cadastrar"));
   }, (err) => {
@@ -153,7 +155,7 @@ export const postShip = (data) => (dispatch) => {
 };
 
 export const postTrip = (data) => (dispatch) => {
-  postData(dispatch, "http://localhost:4000/viagem", data, () => {
+  postData(dispatch, "http://localhost:4000/api/viagem", data, () => {
     dispatch(notify("success", "Viagem cadastrada com sucesso!"));
     dispatch(push("/cadastrar"));
   }, (err) => {
