@@ -21,6 +21,7 @@ class ShipSummary extends React.Component {
         <Td column="name">{item.nome}</Td>
         <Td column="month">{item.mes}</Td>
         <Td column="year">{item.ano}</Td>
+        <Td column="count">{item.viagens_realizadas}</Td>
         <Td column="weight">{item.total_capturado}</Td>
       </Tr>
     ));
@@ -37,6 +38,7 @@ class ShipSummary extends React.Component {
           <Th column="name">Nome da embarcação</Th>
           <Th column="month">Mês</Th>
           <Th column="year">Ano</Th>
+          <Th column="count">Viagens realizadas</Th>
           <Th column="weight">Peso total capturado (kg)</Th>
         </Thead>
         {this.mapDataToRows()}
