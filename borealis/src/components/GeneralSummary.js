@@ -4,6 +4,7 @@ import { fetchGeneralSummary } from '../actions';
 import Loader from './Loader';
 import { PageHeader } from 'react-bootstrap';
 import { Table, Tr, Td, Thead, Th } from 'reactable';
+import FailureAlert from './FailureAlert';
 
 class GeneralSummary extends React.Component {
   componentDidMount() {
@@ -26,21 +27,31 @@ class GeneralSummary extends React.Component {
     ));
   }
 
+  getContent() {
+    if (this.props.failed) {
+      return <FailureAlert/>;
+    }
+
+    return (
+      <Table sortable={true} className="table table-bordered table-hover">
+        <Thead>
+          <Th column="month">Mês</Th>
+          <Th column="year">Ano</Th>
+          <Th column="ships">Embarcações distintas</Th>
+          <Th column="trips">Quantidade de viagens</Th>
+          <Th column="weight">Peso total (kg)</Th>
+        </Thead>
+        {this.mapDataToRows()}
+      </Table>
+    );
+  }
+
   render() {
     return (
       <div>
         <PageHeader>Relatório de atividade geral</PageHeader>
         <Loader fetching={this.props.fetching}>
-          <Table sortable={true} className="table table-bordered table-hover">
-            <Thead>
-              <Th column="month">Mês</Th>
-              <Th column="year">Ano</Th>
-              <Th column="ships">Embarcações distintas</Th>
-              <Th column="trips">Quantidade de viagens</Th>
-              <Th column="weight">Peso total (kg)</Th>
-            </Thead>
-            {this.mapDataToRows()}
-          </Table>
+          {this.getContent()}
         </Loader>
       </div>
     );

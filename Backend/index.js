@@ -250,7 +250,7 @@ especiesRouter.delete("/:id", (req, res) => {
 	}).then(data => {
 		//Deletar as fotografias a partir dos caminhos retornados
 		data[0].forEach(image => {
-			fs.unlink(path.resolve(__dirname, "../borealis/public") + image.caminho, err => {
+			fs.unlink("./public" + image.caminho, err => {
 				console.log(err);
 			});
 		});
@@ -278,7 +278,7 @@ especiesRouter.post("/", (req, res) => {
 					//Gravar os arquivos no disco e mapear para INSERTs
 					const queries = req.body.photos.map(item => {
 						const name = shortid.generate();
-						const fullName = saveBase64(path.resolve(__dirname, "../borealis/public/assets"), name, item.image);
+						const fullName = saveBase64("./public/assets", name, item.image);
 						
 						return t.none("INSERT INTO fotografia (caminho, especie_id) VALUES ($1, $2)", ["/assets/" + fullName, id]);
 					});
@@ -347,7 +347,7 @@ app.use("/api/embarcacao", embarcacoesRouter);
 app.use("/api/porto", portosRouter);
 app.use("/api/especie", especiesRouter);
 app.use("/api/relatorio", relatorioRouter);
-
+app.use(express.static("public"));
 
 
 var server = http.createServer(app);

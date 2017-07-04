@@ -24,6 +24,7 @@ class QueryPort extends React.Component {
           emptyMessage="Nenhum porto cadastrado"
           fetchData={() => this.props.fetchPorts()}
           fetching={this.props.fetching}
+          failed={this.props.failed}
           data={this.props.content}
           contentMapper={(port) => this.mapPort(port)}
         />

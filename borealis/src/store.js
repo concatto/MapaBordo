@@ -22,6 +22,8 @@ const entityReducer = (prefix, state, action) => {
       return {fetching: true};
     case prefix + "_FETCHED":
       return {fetching: false, content: {...state.content, ...action.payload}};
+    case prefix + "_FAILED":
+      return {fetching: false, failed: true};
     case LOCATION_CHANGE:
       return {};
     default:

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
 import Loader from './Loader';
+import FailureAlert from './FailureAlert';
 
 class EntityList extends React.Component {
   componentDidMount() {
@@ -14,7 +15,9 @@ class EntityList extends React.Component {
   }
 
   getContent() {
-    if (this.props.data && Object.keys(this.props.data).length > 0) {
+    if (this.props.failed) {
+      return <FailureAlert/>;
+    } else if (this.props.data && Object.keys(this.props.data).length > 0) {
       return (
         <ListGroup className={this.props.className} onSelect={(key) => alert(key)}>
           {this.mapContent()}

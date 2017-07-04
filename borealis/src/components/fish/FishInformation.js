@@ -12,11 +12,15 @@ class FishInformation extends React.Component {
   }
 
   mapPhotosToComponents() {
-    return this.props.fish.fotos.map((photo) => (
-      <Col xs={6} md={3} key={photo.id}>
-        <Thumbnail src={photo.caminho} href={photo.caminho} target="_blank"/>
-      </Col>
-    ));
+    return this.props.fish.fotos.map((photo) => {
+      const path = "http://localhost:4000" + photo.caminho;
+
+      return (
+        <Col xs={6} md={3} key={photo.id}>
+          <Thumbnail src={path} href={path} target="_blank"/>
+        </Col>
+      );
+    });
   }
 
   getContent() {

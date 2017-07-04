@@ -31,6 +31,7 @@ class QueryTrip extends React.Component {
           emptyMessage="Nenhuma viagem cadastrada"
           fetchData={() => this.props.fetchTrips()}
           fetching={this.props.trips.fetching}
+          failed={this.props.trips.failed}
           data={this.props.trips.content}
           contentMapper={(trip) => this.mapTrip(trip)}
         />

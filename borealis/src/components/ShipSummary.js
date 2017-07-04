@@ -4,6 +4,7 @@ import { fetchShipSummary } from '../actions';
 import Loader from './Loader';
 import { PageHeader } from 'react-bootstrap';
 import { Table, Thead, Th, Tr, Td } from 'reactable';
+import FailureAlert from './FailureAlert';
 
 class ShipSummary extends React.Component {
   componentDidMount() {
@@ -25,20 +26,30 @@ class ShipSummary extends React.Component {
     ));
   }
 
+  getContent() {
+    if (this.props.failed) {
+      return <FailureAlert/>;
+    }
+
+    return (
+      <Table sortable className="table table-hover table-bordered">
+        <Thead>
+          <Th column="name">Nome da embarcação</Th>
+          <Th column="month">Mês</Th>
+          <Th column="year">Ano</Th>
+          <Th column="weight">Peso total capturado (kg)</Th>
+        </Thead>
+        {this.mapDataToRows()}
+      </Table>
+    );
+  }
+
   render() {
     return (
       <div>
         <PageHeader>Relatório de atividade por embarcação</PageHeader>
         <Loader fetching={this.props.fetching}>
-          <Table sortable className="table table-hover table-bordered">
-            <Thead>
-              <Th column="name">Nome da embarcação</Th>
-              <Th column="month">Mês</Th>
-              <Th column="year">Ano</Th>
-              <Th column="weight">Peso total capturado (kg)</Th>
-            </Thead>
-            {this.mapDataToRows()}
-          </Table>
+          {this.getContent()}
         </Loader>
       </div>
     );

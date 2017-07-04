@@ -16,7 +16,7 @@ class ActionCard extends React.Component {
             </Media.Heading>
 
             <LinkButton bsSize="small" to={this.props.link} bsStyle="primary">
-              Aportar
+              Atracar
             </LinkButton>
           </Media.Body>
         </Media>

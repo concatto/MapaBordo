@@ -4,6 +4,7 @@ import { fetchFishSummary } from '../actions';
 import Loader from './Loader';
 import { PageHeader } from 'react-bootstrap';
 import { Table, Thead, Th, Tr, Td } from 'reactable';
+import FailureAlert from './FailureAlert';
 
 class FishSummary extends React.Component {
   componentDidMount() {
@@ -25,20 +26,30 @@ class FishSummary extends React.Component {
     ));
   }
 
+  getContent() {
+    if (this.props.failed) {
+      return <FailureAlert/>;
+    }
+
+    return (
+      <Table sortable className="table table-hover table-bordered">
+        <Thead>
+          <Th column="name">Nome da espécie</Th>
+          <Th column="month">Mês</Th>
+          <Th column="year">Ano</Th>
+          <Th column="weight">Peso total capturado (kg)</Th>
+        </Thead>
+        {this.mapDataToRows()}
+      </Table>
+    );
+  }
+
   render() {
     return (
       <div>
         <PageHeader>Relatório de atividade por espécie</PageHeader>
         <Loader fetching={this.props.fetching}>
-          <Table sortable className="table table-hover table-bordered">
-            <Thead>
-              <Th column="name">Nome da espécie</Th>
-              <Th column="month">Mês</Th>
-              <Th column="year">Ano</Th>
-              <Th column="weight">Peso total capturado (kg)</Th>
-            </Thead>
-            {this.mapDataToRows()}
-          </Table>
+          {this.getContent()}
         </Loader>
       </div>
     );

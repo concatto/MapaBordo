@@ -24,6 +24,7 @@ class QueryFish extends React.Component {
           emptyMessage="Nenhuma espécie cadastrada"
           fetchData={() => this.props.fetchFishes()}
           fetching={this.props.fetching}
+          failed={this.props.failed}
           data={this.props.content}
           contentMapper={(fish) => this.mapFish(fish)}
         />

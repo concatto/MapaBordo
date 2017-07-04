@@ -24,6 +24,7 @@ class QueryShip extends React.Component {
           emptyMessage="Nenhuma embarcação cadastrada"
           fetchData={() => this.props.fetchShips()}
           fetching={this.props.fetching}
+          failed={this.props.failed}
           data={this.props.content}
           contentMapper={(ship) => this.mapShip(ship)}
         />

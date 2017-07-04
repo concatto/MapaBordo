@@ -3,6 +3,8 @@ import Notifications from 'react-notification-system-redux';
 import { extractShips, extractPorts, extractFishes } from '../utils';
 import { push } from 'react-router-redux';
 
+axios.defaults.timeout = 8000;
+
 export const fetchShips = (id) => (dispatch) => {
   fetchData(dispatch, id, "http://localhost:4000/api/embarcacao", "ships");
 };
@@ -38,7 +40,7 @@ export const fetchShipSummary = () => (dispatch) => {
   fetchData(dispatch, null, "http://localhost:4000/api/relatorio/embarcacoes", "summary");
 }
 
-const fetchData = (dispatch, id, url, reducer, onSuccess) => {
+const fetchData = (dispatch, id, url, reducer, onSuccess, onError) => {
   dispatch({type: "FETCH_START"});
 
   const suffix = id ? ("/" + id) : "";
@@ -50,6 +52,11 @@ const fetchData = (dispatch, id, url, reducer, onSuccess) => {
       dispatchData(dispatch, reducer, response.data);
     }
   }).catch((error) => {
+    if (onError) {
+      onError(error);
+    } else {
+      dispatchFailure(dispatch, reducer, error);
+    }
     console.log(error);
   });
 }
@@ -58,6 +65,13 @@ const dispatchData = (dispatch, reducer, data) => {
   dispatch({
     type: reducer.toUpperCase() + "_FETCHED",
     payload: data
+  });
+}
+
+const dispatchFailure = (dispatch, reducer, error) => {
+  dispatch({
+    type: reducer.toUpperCase() + "_FAILED",
+    payload: error
   });
 }
 
