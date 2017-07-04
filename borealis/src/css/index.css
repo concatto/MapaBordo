@@ -120,6 +120,9 @@ body {
   margin-top: 20px;
 }
 
+.insert-root {
+  padding-bottom: 20px;
+}
 
 
 .rc-time-picker {
@@ -141,7 +144,7 @@ body {
   font-size: 15px;
   line-height: 1.4;
   color: #6f6f6f;
-  background-color: #ffffff;
+  background-color: #ffffff !important;
   background-image: none;
   border: 1px solid #cccccc;
   border-radius: 0;

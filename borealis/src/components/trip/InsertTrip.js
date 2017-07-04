@@ -189,7 +189,7 @@ class InsertTrip extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="insert-root">
         <PageHeader>Nova viagem</PageHeader>
         <TripFormContainer onSubmit={(d) => this.handleSubmit(d)}/>
       </div>
